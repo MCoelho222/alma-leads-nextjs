@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id              Int        @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String
+  country         String
+  website         String
+  categories      String[]
+  resume          Bytes?
+  reason          String
+  status          LeadStatus @default(PENDING)
+  createdAt       DateTime   @default(now())
+}
+
+enum LeadStatus {
+  PENDING
+  REACHED_OUT
+}
