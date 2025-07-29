@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@jsonforms/core": "^3.6.0",
+    "@jsonforms/react": "^3.6.0",
+    "@jsonforms/vanilla-renderers": "^3.6.0",
     "@prisma/client": "^6.13.0",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.533.0",
