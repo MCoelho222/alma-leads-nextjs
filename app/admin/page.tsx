@@ -32,7 +32,12 @@ function AdminContent() {
   const totalPages = Math.ceil(total / pageSize);
 
   // Create a stable reference for the fetch function
-  const fetchLeads = async (searchValue: string, statusValue: string, sortValue: string, pageValue: number) => {
+  const fetchLeads = async (
+    searchValue: string,
+    statusValue: string,
+    sortValue: string,
+    pageValue: number
+  ) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -45,7 +50,7 @@ function AdminContent() {
 
       const response = await fetch(`/api/admin/leads?${params}`);
       const data = await response.json();
-      
+
       setLeads(data.leads);
       setTotal(data.total);
     } catch (error) {
@@ -117,61 +122,77 @@ function AdminContent() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-gray-500"
+                  >
                     Loading...
                   </td>
                 </tr>
               ) : leads.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-gray-500"
+                  >
                     No leads found
                   </td>
                 </tr>
               ) : (
                 leads.map((lead) => (
-                <tr key={lead.id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    {lead.firstName} {lead.lastName}
-                  </td>
-                  <td className="px-4 py-3">
-                    {new Date(lead.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-3">
-                    {lead.status === "REACHED_OUT" ? "Reached Out" : "Pending"}
-                  </td>
-                  <td className="px-4 py-3">{lead.country}</td>
-                  <td className="px-4 py-3">
-                    <form action="/api/admin" method="POST" className="inline">
-                      <input type="hidden" name="id" value={lead.id} />
-                      {lead.status === "REACHED_OUT" ? (
-                        <>
-                          <input type="hidden" name="status" value="PENDING" />
-                          <button
-                            type="submit"
-                            className="text-xs px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
-                          >
-                            Mark as Pending
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <input
-                            type="hidden"
-                            name="status"
-                            value="REACHED_OUT"
-                          />
-                          <button
-                            type="submit"
-                            className="text-xs px-3 py-1 bg-black text-white rounded hover:bg-gray-800"
-                          >
-                            Mark as Reached Out
-                          </button>
-                        </>
-                      )}
-                    </form>
-                  </td>
-                </tr>
-              ))
+                  <tr key={lead.id} className="border-t hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      {lead.firstName} {lead.lastName}
+                    </td>
+                    <td className="px-4 py-3">
+                      {new Date(lead.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3">
+                      {lead.status === "REACHED_OUT"
+                        ? "Reached Out"
+                        : "Pending"}
+                    </td>
+                    <td className="px-4 py-3">{lead.country}</td>
+                    <td className="px-4 py-3">
+                      <form
+                        action="/api/admin"
+                        method="POST"
+                        className="inline"
+                      >
+                        <input type="hidden" name="id" value={lead.id} />
+                        {lead.status === "REACHED_OUT" ? (
+                          <>
+                            <input
+                              type="hidden"
+                              name="status"
+                              value="PENDING"
+                            />
+                            <button
+                              type="submit"
+                              className="text-xs px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
+                            >
+                              Mark as Pending
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <input
+                              type="hidden"
+                              name="status"
+                              value="REACHED_OUT"
+                            />
+                            <button
+                              type="submit"
+                              className="text-xs px-3 py-1 bg-black text-white rounded hover:bg-gray-800"
+                            >
+                              Mark as Reached Out
+                            </button>
+                          </>
+                        )}
+                      </form>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -183,55 +204,57 @@ function AdminContent() {
             {/* Previous Button */}
             <Link
               href={{
-                pathname: '/admin',
+                pathname: "/admin",
                 query: {
                   ...Object.fromEntries(searchParams.entries()),
-                  page: Math.max(1, page - 1).toString()
-                }
+                  page: Math.max(1, page - 1).toString(),
+                },
               }}
               className={`px-3 py-2 rounded ${
                 page <= 1
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
             >
               Previous
             </Link>
 
             {/* Page Numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-              <Link
-                key={pageNum}
-                href={{
-                  pathname: '/admin',
-                  query: {
-                    ...Object.fromEntries(searchParams.entries()),
-                    page: pageNum.toString()
-                  }
-                }}
-                className={`px-3 py-2 rounded ${
-                  page === pageNum
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                {pageNum}
-              </Link>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNum) => (
+                <Link
+                  key={pageNum}
+                  href={{
+                    pathname: "/admin",
+                    query: {
+                      ...Object.fromEntries(searchParams.entries()),
+                      page: pageNum.toString(),
+                    },
+                  }}
+                  className={`px-3 py-2 rounded ${
+                    page === pageNum
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {pageNum}
+                </Link>
+              )
+            )}
 
             {/* Next Button */}
             <Link
               href={{
-                pathname: '/admin',
+                pathname: "/admin",
                 query: {
                   ...Object.fromEntries(searchParams.entries()),
-                  page: Math.min(totalPages, page + 1).toString()
-                }
+                  page: Math.min(totalPages, page + 1).toString(),
+                },
               }}
               className={`px-3 py-2 rounded ${
                 page >= totalPages
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
             >
               Next

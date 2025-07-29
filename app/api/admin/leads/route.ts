@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     };
 
     const [field, direction] = sort.split(":") as [string, "asc" | "desc"];
-    
+
     const [total, leads] = await Promise.all([
       prisma.lead.count({ where }),
       prisma.lead.findMany({
