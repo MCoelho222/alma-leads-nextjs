@@ -1,0 +1,9 @@
+# .gitignore
+node_modules
+.next
+.env
+.env.local
+dist
+coverage
+*.log
+*.sqlite
