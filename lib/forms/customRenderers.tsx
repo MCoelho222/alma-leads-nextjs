@@ -32,20 +32,6 @@ const TextInputControl = ({
   const fieldError = hasAttemptedSubmit ? fieldErrors[path] : "";
   const hasErrors = !!fieldError;
 
-  // Debug logging - show all props to understand error structure
-  console.log(`TextInput ${path} - ALL PROPS:`, {
-    errors,
-    data,
-    hasErrors,
-    fieldError,
-    hasAttemptedSubmit,
-    errorType: typeof errors,
-    errorLength: errors?.length,
-    errorContent: errors,
-    schema: schema?.title,
-    uischema: uischema?.type,
-  });
-
   return (
     <div className="w-full">
       <input
@@ -88,17 +74,6 @@ const TextAreaControl = ({
   // Use custom validation errors when attempted submit
   const fieldError = hasAttemptedSubmit ? fieldErrors[path] : "";
   const hasErrors = !!fieldError;
-
-  console.log(`TextArea ${path} - ALL PROPS:`, {
-    errors,
-    data,
-    hasErrors,
-    fieldError,
-    hasAttemptedSubmit,
-    errorType: typeof errors,
-    errorLength: errors?.length,
-    errorContent: errors,
-  });
 
   return (
     <div className="w-full">
@@ -208,17 +183,6 @@ const CheckboxArrayControl = ({
   // Use custom validation errors when attempted submit
   const fieldError = hasAttemptedSubmit ? fieldErrors[path] : "";
   const hasErrors = !!fieldError;
-
-  console.log(`CheckboxArray ${path} - ALL PROPS:`, {
-    errors,
-    data,
-    hasErrors,
-    fieldError,
-    hasAttemptedSubmit,
-    errorType: typeof errors,
-    errorLength: errors?.length,
-    errorContent: errors,
-  });
 
   const handleCheckboxChange = (value: string, checked: boolean) => {
     const newValues = checked

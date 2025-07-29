@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    console.log("API called - starting form processing");
     const formData = await req.formData();
 
     const file = formData.get("resume") as File | null;
@@ -12,10 +11,6 @@ export async function POST(req: Request) {
     // Extract categories with proper type conversion
     const categoriesData = formData.getAll("categories");
     const categories: string[] = categoriesData.map((item) => String(item));
-
-    console.log("Categories received:", categories);
-    console.log("Categories type:", typeof categories);
-    console.log("Is array:", Array.isArray(categories));
 
     const leadData = {
       firstName: formData.get("firstName") as string,
@@ -28,14 +23,10 @@ export async function POST(req: Request) {
       resume: buffer,
     };
 
-    console.log("Lead data prepared:", leadData);
-    console.log("About to create lead in database...");
-
     const lead = await prisma.lead.create({
       data: leadData as any,
     });
 
-    console.log("Lead created successfully:", lead.id);
     return NextResponse.json({ ok: true, lead: lead.id });
   } catch (error) {
     console.error("Detailed error creating lead:", error);

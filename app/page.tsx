@@ -174,25 +174,16 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🔴 SUBMIT CLICKED - hasAttemptedSubmit:", hasAttemptedSubmit);
-    console.log("🔴 SUBMIT CLICKED - formData:", formData);
 
     if (!hasAttemptedSubmit) {
-      console.log("🔴 First submit attempt - validating fields");
       setHasAttemptedSubmit(true);
 
       // Validate form data
       const errors = validateFormFields(formData);
-      console.log("🔴 Validation errors:", errors);
       setFieldErrors(errors);
 
       if (Object.keys(errors).length === 0) {
-        console.log(
-          "🔴 No validation errors found, proceeding with submission"
-        );
         submitForm();
-      } else {
-        console.log("🔴 Validation errors found, staying on form");
       }
       return;
     }
@@ -202,10 +193,7 @@ export default function Home() {
     setFieldErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      console.log("🔴 Form is valid, submitting");
       submitForm();
-    } else {
-      console.log("🔴 Form still has validation errors:", errors);
     }
   };
 
@@ -251,7 +239,7 @@ export default function Home() {
           height={64}
           className="mx-auto mb-3 sm:mb-4"
         />
-        <h2 className="text-lg sm:text-xl font-bold text-center">
+        <h2 className="text-lg sm:text-xl font-bold text-center mb-5">
           Want to understand your visa options?
         </h2>
         <div className="relative">
@@ -281,12 +269,6 @@ export default function Home() {
               renderers={renderers}
               cells={vanillaCells}
               onChange={({ data, errors }) => {
-                console.log(
-                  "JsonForms onChange - data:",
-                  data,
-                  "errors:",
-                  errors
-                );
                 setFormData(data);
                 setValidationErrors(errors || []);
               }}
