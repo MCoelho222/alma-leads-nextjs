@@ -204,7 +204,7 @@ const CheckboxArrayControl = ({
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              marginBottom: "12px",
+              marginBottom: "4px",
             }}
           >
             <input

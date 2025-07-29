@@ -10,8 +10,8 @@ export default function ThankYou() {
       <Image
         src="/icons/file-icon.png"
         alt="Info document"
-        width={48}
-        height={48}
+        width={64}
+        height={64}
         className="mx-auto mb-4"
       />
       <h1 className="text-3xl font-bold mb-4">Thank you!</h1>

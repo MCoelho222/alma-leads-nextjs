@@ -15,17 +15,21 @@ export default function SearchFilter() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
+    // Only update URL if the search term actually changed from what's in URL
+    const currentSearch = searchParams.get("search") || "";
+    if (debouncedSearchTerm !== currentSearch) {
+      const params = new URLSearchParams(searchParams.toString());
 
-    if (debouncedSearchTerm) {
-      params.set("search", debouncedSearchTerm);
-    } else {
-      params.delete("search");
+      if (debouncedSearchTerm) {
+        params.set("search", debouncedSearchTerm);
+      } else {
+        params.delete("search");
+      }
+      params.set("page", "1"); // Reset to first page when searching
+
+      router.push(`/admin?${params.toString()}`);
     }
-    params.set("page", "1"); // Reset to first page when searching
-
-    router.push(`/admin?${params.toString()}`);
-  }, [debouncedSearchTerm, searchParams, router]);
+  }, [debouncedSearchTerm, router, searchParams]);
 
   return (
     <input

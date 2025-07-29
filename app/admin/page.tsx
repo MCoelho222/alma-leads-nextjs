@@ -1,46 +1,63 @@
+"use client";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 import StatusFilter from "./StatusFilter";
 import SearchFilter from "./SearchFilter";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
 
-export const dynamic = "force-dynamic";
+interface Lead {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  country: string;
+  status: string;
+  createdAt: Date;
+}
 
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams: Record<string, string>;
-}) {
-  const search = searchParams.search || "";
-  const status = searchParams.status || "";
-  const sort = searchParams.sort || "createdAt:desc";
-  const page = parseInt(searchParams.page || "1", 10);
+function AdminContent() {
+  const searchParams = useSearchParams();
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const search = searchParams.get("search") || "";
+  const status = searchParams.get("status") || "";
+  const sort = searchParams.get("sort") || "createdAt:desc";
+  const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 5;
 
-  const where: any = {
-    AND: [
-      search
-        ? {
-            OR: [
-              { firstName: { contains: search, mode: "insensitive" } },
-              { lastName: { contains: search, mode: "insensitive" } },
-              { email: { contains: search, mode: "insensitive" } },
-            ],
-          }
-        : {},
-      status ? { status } : {},
-    ],
+  const totalPages = Math.ceil(total / pageSize);
+
+  // Create a stable reference for the fetch function
+  const fetchLeads = async (searchValue: string, statusValue: string, sortValue: string, pageValue: number) => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        search: searchValue,
+        status: statusValue,
+        sort: sortValue,
+        page: pageValue.toString(),
+        pageSize: pageSize.toString(),
+      });
+
+      const response = await fetch(`/api/admin/leads?${params}`);
+      const data = await response.json();
+      
+      setLeads(data.leads);
+      setTotal(data.total);
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const [field, direction] = sort.split(":") as [string, "asc" | "desc"];
-  const total = await prisma.lead.count({ where });
-  const leads = await prisma.lead.findMany({
-    where,
-    orderBy: { [field]: direction },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-  });
-
-  const totalPages = Math.ceil(total / pageSize);
+  useEffect(() => {
+    fetchLeads(search, status, sort, page);
+  }, [search, status, sort, page]);
 
   return (
     <div className="flex min-h-screen">
@@ -87,10 +104,10 @@ export default async function AdminPage({
                   const href = `?search=${search}&status=${status}&sort=${field}:${dir}&page=1`;
                   return (
                     <th key={field} className="px-4 py-3">
-                      <a href={href} className="hover:underline">
+                      <Link href={href} className="hover:underline">
                         {label}{" "}
                         {isActive ? (sort.endsWith("asc") ? "↑" : "↓") : "↓"}
-                      </a>
+                      </Link>
                     </th>
                   );
                 })}
@@ -98,7 +115,20 @@ export default async function AdminPage({
               </tr>
             </thead>
             <tbody>
-              {leads.map((lead) => (
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                    Loading...
+                  </td>
+                </tr>
+              ) : leads.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                    No leads found
+                  </td>
+                </tr>
+              ) : (
+                leads.map((lead) => (
                 <tr key={lead.id} className="border-t hover:bg-gray-50">
                   <td className="px-4 py-3">
                     {lead.firstName} {lead.lastName}
@@ -141,30 +171,82 @@ export default async function AdminPage({
                     </form>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center mt-6 gap-2">
-          {Array.from({ length: totalPages }).map((_, i) => {
-            const p = i + 1;
-            const href = `?search=${search}&status=${status}&sort=${sort}&page=${p}`;
-            return (
-              <a
-                key={p}
-                href={href}
-                className={`px-3 py-1 border rounded ${
-                  p === page ? "bg-black text-white" : ""
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-2 mt-8">
+            {/* Previous Button */}
+            <Link
+              href={{
+                pathname: '/admin',
+                query: {
+                  ...Object.fromEntries(searchParams.entries()),
+                  page: Math.max(1, page - 1).toString()
+                }
+              }}
+              className={`px-3 py-2 rounded ${
+                page <= 1
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </Link>
+
+            {/* Page Numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <Link
+                key={pageNum}
+                href={{
+                  pathname: '/admin',
+                  query: {
+                    ...Object.fromEntries(searchParams.entries()),
+                    page: pageNum.toString()
+                  }
+                }}
+                className={`px-3 py-2 rounded ${
+                  page === pageNum
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                {p}
-              </a>
-            );
-          })}
-        </div>
+                {pageNum}
+              </Link>
+            ))}
+
+            {/* Next Button */}
+            <Link
+              href={{
+                pathname: '/admin',
+                query: {
+                  ...Object.fromEntries(searchParams.entries()),
+                  page: Math.min(totalPages, page + 1).toString()
+                }
+              }}
+              className={`px-3 py-2 rounded ${
+                page >= totalPages
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Next
+            </Link>
+          </div>
+        )}
       </main>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AdminContent />
+    </Suspense>
   );
 }

@@ -13,7 +13,13 @@ export default function StatusFilter() {
     } else {
       params.delete('status')
     }
-    params.set('page', '1') // Reset to first page when filtering
+    
+    // Only reset to page 1 if we're actually changing the filter
+    const currentStatus = searchParams.get('status') || ''
+    if (e.target.value !== currentStatus) {
+      params.set('page', '1')
+    }
+    
     router.push(`/admin?${params.toString()}`)
   }
 
