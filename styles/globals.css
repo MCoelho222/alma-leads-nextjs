@@ -5,3 +5,36 @@
 .input {
   @apply w-full border border-gray-300 rounded px-3 py-2;
 }
+
+/* JsonForms validation error styling */
+.validation-error,
+.ajv-error,
+.error-message {
+  @apply text-red-600 text-xs font-medium mt-1;
+}
+
+/* Ensure all error elements have red text */
+[class*="error"],
+[id*="error"],
+.jsonforms-error {
+  @apply text-red-600;
+}
+
+/* Explicit red validation error styling with !important */
+.validation-error-explicit {
+  color: #dc2626 !important;
+  font-weight: 500 !important;
+  font-size: 0.75rem !important;
+  margin-top: 0.25rem !important;
+}
+
+.input-error-explicit {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 1px #dc2626 !important;
+}
+
+.input-error-explicit:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+  outline: none !important;
+}
