@@ -86,6 +86,20 @@ function AdminContent() {
     );
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", {
+        method: "POST",
+      });
+      // Redirect to home page after logout
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still redirect even if logout API fails
+      window.location.href = "/";
+    }
+  };
+
   useEffect(() => {
     fetchLeads(search, status, sort, page);
   }, [search, status, sort, page]);
@@ -94,38 +108,83 @@ function AdminContent() {
     <div className="flex min-h-screen flex-col lg:flex-row">
       {/* Sidebar */}
       <aside
-        className="w-full lg:w-60 bg-gradient-to-br from-yellow-50 via-yellow-25 to-white p-4 lg:p-6 border-r lg:border-r border-b lg:border-b-0"
+        className="w-full lg:w-60 bg-gradient-to-br from-yellow-50 via-yellow-25 to-white p-4 lg:p-6 border-r lg:border-r border-b lg:border-b-0 relative"
         style={{
           background:
             "linear-gradient(to bottom right, #fffbeb, #fefce8, #ffffff)",
         }}
       >
         <h1 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8">alma</h1>
-        <nav className="text-base lg:text-lg font-medium text-left flex lg:flex-col flex-row gap-4 lg:gap-4 items-center lg:items-start">
-          <Link
-            href="/admin"
-            className="text-black px-3 lg:px-4 py-2 font-bold block hover:bg-gray-100 transition-colors rounded-lg"
-          >
-            Leads
-          </Link>
-          <div className="relative group">
+        <nav className="text-base lg:text-lg font-medium text-left flex lg:flex-col flex-row gap-4 lg:gap-4 items-center lg:items-start justify-between lg:justify-start">
+          <div className="flex lg:flex-col flex-row gap-4 items-center lg:items-start">
             <Link
-              href="#"
-              className="text-gray-400 px-3 lg:px-4 py-2 font-bold block cursor-not-allowed rounded-lg"
-              onClick={(e) => e.preventDefault()}
+              href="/admin"
+              className="text-black px-3 lg:px-4 py-2 font-bold block hover:bg-gray-100 transition-colors rounded-lg"
             >
-              Settings
+              Leads
             </Link>
-            <div className="absolute left-0 top-8 bg-gray-50 text-gray-700 text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-10 shadow-sm border border-gray-200">
-              To be implemented
+            <div className="relative group">
+              <Link
+                href="#"
+                className="text-gray-400 px-3 lg:px-4 py-2 font-bold block cursor-not-allowed rounded-lg"
+                onClick={(e) => e.preventDefault()}
+              >
+                Settings
+              </Link>
+              <div className="absolute left-0 top-8 bg-gray-50 text-gray-700 text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-10 shadow-sm border border-gray-200">
+                To be implemented
+              </div>
             </div>
           </div>
+          {/* Mobile logout button */}
+          <button
+            onClick={handleLogout}
+            className="lg:hidden p-2 text-gray-500 hover:text-gray-700 transition-colors ml-auto"
+            title="Logout"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          </button>
         </nav>
-        <div className="hidden lg:flex absolute bottom-4 left-6 text-sm text-gray-500 items-center space-x-2">
-          <div className="rounded-full bg-gray-300 text-gray-700 w-8 h-8 flex items-center justify-center font-bold">
-            A
+        <div className="hidden lg:flex absolute bottom-4 left-4 right-4 text-sm text-gray-500 items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="rounded-full bg-gray-300 text-gray-700 w-8 h-8 flex items-center justify-center font-bold">
+              A
+            </div>
+            <span className="font-bold">Admin</span>
           </div>
-          <span className="font-bold">Admin</span>
+          <button
+            onClick={handleLogout}
+            className="p-1 text-gray-500 hover:text-gray-700 transition-colors"
+            title="Logout"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          </button>
         </div>
       </aside>
 

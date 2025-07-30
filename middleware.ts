@@ -14,8 +14,11 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Check API admin routes - still need basic auth for API calls
-  if (url.pathname.startsWith("/api/admin")) {
+  // Check API admin routes - still need basic auth for API calls (except logout)
+  if (
+    url.pathname.startsWith("/api/admin") &&
+    !url.pathname.startsWith("/api/admin/logout")
+  ) {
     const basicAuth = request.headers.get("authorization");
 
     if (basicAuth) {
@@ -37,3 +40,7 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
+};

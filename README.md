@@ -14,7 +14,7 @@ A modern lead capture and management system built with Next.js, featuring dynami
 
 2. **Start Database**: `docker-compose up -d`
 
-3. **Setup Database**: `npx prisma migrate dev && npx prisma generate`
+3. **Setup Database**: `npx prisma migrate deploy && npx prisma generate`
 
 4. **Start Application**: `npm run dev`
 
@@ -60,9 +60,7 @@ Password: password
 1. **Admin Login**: Navigate to `/admin` and enter credentials
 2. **Cookie-based Session**: Persistent login session using HTTP-only cookies
 3. **Route Protection**: Middleware automatically redirects unauthenticated users to login
-4. **Session Management**: Logout functionality available in admin interface
-
-## 🏗️ Tech Stack
+4. **Session Management**: Logout functionality available via logout icon in admin interface## 🏗️ Tech Stack
 
 - **Frontend**: Next.js 14.1.3 with React 18.2.0
 - **Styling**: Tailwind CSS with custom components
@@ -99,7 +97,7 @@ Password: password
 - **Cookie-based Auth**: Secure authentication using HTTP-only cookies
 - **Route Protection**: Middleware-based route protection for admin areas
 - **API Security**: Basic authentication for admin API endpoints
-- **Session Management**: Persistent login sessions with proper logout
+- **Session Management**: Persistent login sessions with logout functionality
 
 ## 🎨 Design Decisions
 
@@ -282,8 +280,8 @@ npm install
 # Start PostgreSQL database
 docker-compose up -d
 
-# Set up database
-npx prisma migrate dev
+# Set up database (apply existing migrations)
+npx prisma migrate deploy
 npx prisma generate
 
 # Start development server
