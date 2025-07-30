@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  JsonFormsRendererRegistryEntry,
-  Layout,
-  rankWith,
-  uiTypeIs,
-  LayoutProps,
-} from "@jsonforms/core";
+import { Layout, rankWith, LayoutProps } from "@jsonforms/core";
 import { JsonFormsDispatch, withJsonFormsLayoutProps } from "@jsonforms/react";
 
 const HorizontalLayoutRenderer = ({

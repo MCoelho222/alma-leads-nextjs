@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { withJsonFormsControlProps } from "@jsonforms/react";
 import { ControlProps } from "@jsonforms/core";
 
@@ -12,17 +12,11 @@ const FileUploadControl = ({
   data,
   handleChange,
   path,
-  errors,
-  schema,
-  uischema,
   visible,
   enabled,
 }: FileUploadControlProps) => {
-  const [file, setFile] = useState<File | null>(data);
-
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
-    setFile(selectedFile);
     handleChange(path, selectedFile);
   };
 
@@ -46,9 +40,6 @@ const FileUploadControl = ({
         className="input file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
         onChange={onChange}
       />
-      {errors && errors.length > 0 && (
-        <div className="text-red-500 text-sm mt-1">{errors}</div>
-      )}
     </div>
   );
 };

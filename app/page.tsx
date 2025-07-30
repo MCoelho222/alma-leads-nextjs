@@ -3,8 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { JsonForms } from "@jsonforms/react";
-import { vanillaRenderers, vanillaCells } from "@jsonforms/vanilla-renderers";
-import { createAjv } from "@jsonforms/core";
+import { vanillaCells } from "@jsonforms/vanilla-renderers";
 import {
   leadFormSchema,
   leadFormUISchema,
@@ -33,6 +32,8 @@ export default function Home() {
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [validationErrors, setValidationErrors] = useState<any[]>([]);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<{
     firstName: string;
@@ -64,7 +65,6 @@ export default function Home() {
     { tester: iconControlTester, renderer: iconControl },
     { tester: headingControlTester, renderer: headingControl },
     { tester: checkboxArrayControlTester, renderer: checkboxArrayControl },
-    ...vanillaRenderers,
   ];
 
   // Custom validation for field-level error display
@@ -129,49 +129,6 @@ export default function Home() {
     return errors;
   };
 
-  // Validation function
-  const validateForm = () => {
-    const errors = [];
-
-    // Required field validation
-    if (!formData.firstName?.trim()) errors.push("First Name is required");
-    if (!formData.lastName?.trim()) errors.push("Last Name is required");
-    if (!formData.email?.trim()) errors.push("Email is required");
-    if (!formData.country?.trim()) errors.push("Country is required");
-    if (!formData.reason?.trim()) errors.push("Reason is required");
-    if (!formData.categories?.length)
-      errors.push("At least one visa category is required");
-
-    // Length validation
-    if (formData.firstName && formData.firstName.length < 2)
-      errors.push("First Name must be at least 2 characters");
-    if (formData.lastName && formData.lastName.length < 2)
-      errors.push("Last Name must be at least 2 characters");
-    if (formData.reason && formData.reason.length < 10)
-      errors.push("Reason must be at least 10 characters");
-
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      errors.push("Please enter a valid email address");
-    }
-
-    // Name pattern validation
-    const nameRegex = /^[a-zA-Z\s'-]+$/;
-    if (formData.firstName && !nameRegex.test(formData.firstName)) {
-      errors.push(
-        "First Name can only contain letters, spaces, hyphens, and apostrophes"
-      );
-    }
-    if (formData.lastName && !nameRegex.test(formData.lastName)) {
-      errors.push(
-        "Last Name can only contain letters, spaces, hyphens, and apostrophes"
-      );
-    }
-
-    return errors;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -198,23 +155,43 @@ export default function Home() {
   };
 
   const submitForm = async () => {
-    const formDataToSend = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === "resume" && value instanceof File) {
-        formDataToSend.append(key, value);
-      } else if (Array.isArray(value)) {
-        value.forEach((item) => formDataToSend.append(key, item));
-      } else if (typeof value === "string") {
-        formDataToSend.append(key, value);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const formDataToSend = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "resume" && value instanceof File) {
+          formDataToSend.append(key, value);
+        } else if (Array.isArray(value)) {
+          value.forEach((item) => formDataToSend.append(key, item));
+        } else if (typeof value === "string") {
+          formDataToSend.append(key, value);
+        }
+      });
+
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      if (res.ok) {
+        router.push("/thank-you");
+      } else {
+        // Handle HTTP error responses
+        const errorText = await res.text();
+        setSubmitError(
+          `Failed to submit form. Please try again. (Error: ${res.status})`
+        );
       }
-    });
-
-    const res = await fetch("/api/leads", {
-      method: "POST",
-      body: formDataToSend,
-    });
-
-    if (res.ok) router.push("/thank-you");
+    } catch (error) {
+      // Handle network errors (server not running, connection issues, etc.)
+      setSubmitError(
+        "Unable to connect to the server. Please check your internet connection and try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -276,11 +253,61 @@ export default function Home() {
             />
           </ValidationProvider>
 
+          {submitError && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-5 w-5 text-red-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-800">{submitError}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <button
             type="submit"
-            className="bg-black text-white w-full py-2 sm:py-3 rounded font-semibold text-sm sm:text-base"
+            disabled={isSubmitting}
+            className="bg-black text-white w-full py-2 sm:py-3 rounded font-semibold text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            Submit
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Submitting...
+              </>
+            ) : (
+              "Submit"
+            )}
           </button>
         </form>
       </div>

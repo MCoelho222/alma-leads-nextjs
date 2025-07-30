@@ -1,6 +1,5 @@
 "use client";
-import { prisma } from "@/lib/db";
-import { redirect } from "next/navigation";
+
 import StatusFilter from "./StatusFilter";
 import SearchFilter from "./SearchFilter";
 import Link from "next/link";
@@ -67,17 +66,23 @@ function AdminContent() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-60 bg-[#f7f7ef] p-6 border-r">
-        <h1 className="text-2xl font-bold mb-8">alma</h1>
-        <nav className="space-y-4 text-sm font-medium">
+      <aside
+        className="w-60 bg-gradient-to-br from-yellow-50 via-yellow-25 to-white p-6 border-r"
+        style={{
+          background:
+            "linear-gradient(to bottom right, #fffbeb, #fefce8, #ffffff)",
+        }}
+      >
+        <h1 className="text-3xl font-bold mb-8">alma</h1>
+        <nav className="space-y-4 text-lg font-medium">
           <div className="text-black">Leads</div>
           <div className="text-gray-400">Settings</div>
         </nav>
-        <div className="absolute bottom-4 left-6 text-xs text-gray-500">
-          <div className="rounded-full bg-black text-white w-7 h-7 flex items-center justify-center mb-1">
+        <div className="absolute bottom-4 left-6 text-sm text-gray-500 flex items-center space-x-2">
+          <div className="rounded-full bg-gray-300 text-gray-700 w-8 h-8 flex items-center justify-center font-bold">
             A
           </div>
-          Admin
+          <span className="font-bold">Admin</span>
         </div>
       </aside>
 
@@ -94,7 +99,7 @@ function AdminContent() {
         {/* Table */}
         <div className="w-full border rounded-lg overflow-hidden overflow-x-auto">
           <table className="w-full text-sm text-left min-w-[700px]">
-            <thead className="bg-gray-100 text-gray-600 text-xs uppercase">
+            <thead className="bg-gray-100 text-gray-500 text-sm">
               <tr>
                 {["Name", "Submitted", "Status", "Country"].map((label, i) => {
                   const fields = [
@@ -200,8 +205,8 @@ function AdminContent() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center space-x-2 mt-8">
-            {/* Previous Button */}
+          <div className="flex justify-end items-center space-x-3 mt-8">
+            {/* Previous Arrow */}
             <Link
               href={{
                 pathname: "/admin",
@@ -210,13 +215,13 @@ function AdminContent() {
                   page: Math.max(1, page - 1).toString(),
                 },
               }}
-              className={`px-3 py-2 rounded ${
+              className={`text-lg ${
                 page <= 1
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-600 hover:text-black"
               }`}
             >
-              Previous
+              &lt;
             </Link>
 
             {/* Page Numbers */}
@@ -231,10 +236,10 @@ function AdminContent() {
                       page: pageNum.toString(),
                     },
                   }}
-                  className={`px-3 py-2 rounded ${
+                  className={`text-sm w-6 h-6 flex items-center justify-center ${
                     page === pageNum
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "font-bold text-black border border-gray-400"
+                      : "text-gray-600 hover:text-black"
                   }`}
                 >
                   {pageNum}
@@ -242,7 +247,7 @@ function AdminContent() {
               )
             )}
 
-            {/* Next Button */}
+            {/* Next Arrow */}
             <Link
               href={{
                 pathname: "/admin",
@@ -251,13 +256,13 @@ function AdminContent() {
                   page: Math.min(totalPages, page + 1).toString(),
                 },
               }}
-              className={`px-3 py-2 rounded ${
+              className={`text-lg ${
                 page >= totalPages
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-600 hover:text-black"
               }`}
             >
-              Next
+              &gt;
             </Link>
           </div>
         )}
