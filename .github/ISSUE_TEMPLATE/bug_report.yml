@@ -1,0 +1,104 @@
+name: Bug Report
+description: Report a bug or issue with the application
+title: "[BUG] "
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below to help us understand and fix the issue.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Where did you encounter this bug?
+      placeholder: "Local development / Staging / Production"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions to reproduce the bug
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+      placeholder: Describe the expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots/Videos
+      description: If applicable, add screenshots or videos to help explain the problem
+      placeholder: Drag and drop images here or paste URLs
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Application Area
+      description: Which part of the application is affected?
+      options:
+        - Lead Submission Form
+        - Admin Dashboard
+        - Authentication/Login
+        - File Upload
+        - Database/API
+        - UI/Styling
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: browser
+    attributes:
+      label: Browser/Device Information
+      description: What browser and device are you using?
+      placeholder: |
+        - Browser: Chrome, Firefox, Safari, etc.
+        - Version: 
+        - Device: Desktop, Mobile, Tablet
+        - OS: Windows, macOS, iOS, Android
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console Logs/Error Messages
+      description: Include any relevant console logs or error messages
+      render: shell
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: Testing Information
+      description: Help us understand the testing context
+      options:
+        - label: I have checked that this issue doesn't already exist
+          required: true
+        - label: I have tested this on the latest version
+          required: true
+        - label: I can consistently reproduce this issue
+          required: false
