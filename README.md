@@ -491,13 +491,22 @@ npm test -- __tests__/components/Home.test.tsx
 
 ### CI/CD Pipeline 🚀
 
-**Automated testing** on every pull request with GitHub Actions:
+**3-job automated pipeline** runs on every pull request:
 
-- **Pull Request Checks**: All tests must pass before merge
-- **Database Setup**: PostgreSQL service with health checks
-- **Security Scanning**: npm audit and TypeScript validation
-- **Build Verification**: Ensures production build succeeds
-- **Branch Protection**: Enforced quality gates
+1. **🧪 Test Suite** - 106 tests with PostgreSQL service
+2. **🔧 Code Quality** - ESLint, Prettier, TypeScript, Coverage (31.69%)
+3. **🔒 Security** - npm audit, vulnerability scanning (0 issues)
+
+**Quality Gates**: All jobs must pass before merge. Branch protection enforced.
+
+### Local Development
+
+```bash
+npm run quality          # Run full quality pipeline
+npm run test:coverage    # Tests with coverage
+npm run lint:eslint      # Code quality checks
+npm run format           # Auto-format code
+```
 
 ### Test Suites Overview
 
