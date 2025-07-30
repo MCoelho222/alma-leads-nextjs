@@ -9,16 +9,19 @@ datasource db {
 
 model Lead {
   id              Int        @id @default(autoincrement())
-  firstName       String
-  lastName        String
-  email           String
-  country         String
-  website         String
+  firstName       String     @db.VarChar(50)
+  lastName        String     @db.VarChar(50)
+  email           String     @db.VarChar(100)
+  country         String     @db.VarChar(100)
+  website         String     @db.VarChar(200)
   categories      String[]
   resume          Bytes?
-  reason          String
+  reason          String     @db.VarChar(1000)
   status          LeadStatus @default(PENDING)
   createdAt       DateTime   @default(now())
+
+  @@index([email])
+  @@index([createdAt])
 }
 
 enum LeadStatus {

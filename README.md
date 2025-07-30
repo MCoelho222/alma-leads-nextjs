@@ -1,6 +1,6 @@
 # Alma Lead Assessment - Next.js Application
 
-A modern lead capture and management system built with Next.js, featuring dynamic form validation, admin dashboard, and PostgreSQL database integration.
+A modern lead capture and management system built with Next.js, featuring dynamic form validation, enterprise-grade security, admin dashboard, and PostgreSQL database integration.
 
 ## ⚡ Quick Start
 
@@ -21,6 +21,7 @@ A modern lead capture and management system built with Next.js, featuring dynami
 5. **Access Routes**:
    - **Public Form**: http://localhost:3000/
    - **Admin Dashboard**: http://localhost:3000/admin (admin/password)
+   - **Admin Login**: http://localhost:3000/login
 
 ## 🚀 Project Overview
 
@@ -37,6 +38,13 @@ This application serves as a comprehensive lead management system for immigratio
 - **`/thank-you`** - **Success Page**
   - Confirmation page after successful lead submission
   - Displays success message to users
+
+### Authentication Routes
+
+- **`/login`** - **Admin Login Page**
+  - Authentication form for admin access
+  - Redirects to admin dashboard upon successful login
+  - Sets HTTP-only authentication cookies
 
 ### Protected Routes (Authentication Required)
 
@@ -57,17 +65,21 @@ Password: password
 
 ### Authentication Flow
 
-1. **Admin Login**: Navigate to `/admin` and enter credentials
-2. **Cookie-based Session**: Persistent login session using HTTP-only cookies
-3. **Route Protection**: Middleware automatically redirects unauthenticated users to login
-4. **Session Management**: Logout functionality available via logout icon in admin interface## 🏗️ Tech Stack
+1. **Admin Access**: Navigate to `/admin` → automatically redirects to `/login` if not authenticated
+2. **Login Process**: Enter credentials (admin/password) on login page
+3. **Cookie-based Session**: Persistent login session using HTTP-only cookies
+4. **Route Protection**: Middleware automatically redirects unauthenticated users to login
+5. **Session Management**: Logout functionality available via logout icon in admin interface
+
+## 🏗️ Tech Stack
 
 - **Frontend**: Next.js 14.1.3 with React 18.2.0
 - **Styling**: Tailwind CSS with custom components
 - **Form Management**: JsonForms with custom renderers
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Cookie-based authentication for admin access
-- **File Upload**: Native FormData handling
+- **File Upload**: Secure file handling with type/size validation
+- **Security**: Multi-layer security with rate limiting and input validation
 - **UI Components**: Custom-built with Tailwind CSS
 - **Type Safety**: TypeScript throughout the application
 
@@ -77,10 +89,13 @@ Password: password
 
 - **JsonForms Integration**: Utilizes JsonForms for flexible, schema-driven form rendering
 - **Progressive Validation**: Lenient validation during input, strict validation on submit
-- **File Upload**: Resume upload functionality with proper file handling
+- **Secure File Upload**: Resume upload with type validation (PDF, DOC, DOCX, TXT) and 5MB size limit
+- **Server-Side Validation**: Comprehensive input validation and sanitization on the backend
+- **Rate Limiting**: DoS protection with 5 requests per 15 minutes per IP
 - **Real-time Feedback**: Immediate validation feedback with custom error messaging
 - **Loading States**: Professional loading indicators during form submission
 - **Error Handling**: Comprehensive error handling for network and server issues
+- **Security Headers**: XSS protection, clickjacking prevention, and content type validation
 
 ### 2. Admin Dashboard
 
@@ -113,12 +128,14 @@ Password: password
 
 ### Validation Strategy
 
-**Choice**: Dual Validation System
+**Choice**: Triple-Layer Validation System
 **Implementation**:
 
-- **Lenient Schema**: Minimal validation during form interaction
-- **Strict Schema**: Complete validation on submit attempt
+- **Client-side Lenient Schema**: Minimal validation during form interaction
+- **Client-side Strict Schema**: Complete validation on submit attempt
+- **Server-side Validation**: Comprehensive security validation with sanitization
 - **Custom Validators**: Field-specific validation with user-friendly messages
+- **Rate Limiting**: Request-level validation to prevent abuse
 
 ### State Management
 
@@ -175,17 +192,77 @@ enum LeadStatus {
 
 ### Authentication Flow
 
-1. **Admin Login**: Form-based login with username/password
-2. **Cookie Setting**: HTTP-only cookie set on successful authentication
+1. **Admin Login**: Form-based login with username/password at `/login`
+2. **Cookie Setting**: HTTP-only cookie (`admin-auth`) set on successful authentication
 3. **Middleware Protection**: Next.js middleware validates cookies for protected routes
-4. **API Protection**: Basic authentication for admin API endpoints
+4. **API Protection**: Basic authentication for admin API endpoints (logout endpoint excluded)
+5. **Logout Process**: Logout endpoint clears authentication cookie without requiring basic auth
 
 ### Security Measures
 
-- **Route Protection**: Middleware-based protection for `/admin` routes
-- **API Security**: Separate authentication for API endpoints
+- **Route Protection**: Middleware-based protection for `/admin` routes with automatic redirect to `/login`
+- **API Security**: Basic authentication for admin API endpoints (except logout)
+- **Public Route Security**: Comprehensive protection for lead submission endpoint
+  - Server-side input validation and sanitization
+  - File upload security (type, size, MIME validation)
+  - Rate limiting (5 requests per 15 minutes per IP)
+  - Secure error handling (no information leakage)
+- **Security Headers**: XSS protection, clickjacking prevention, content type validation
+- **Cookie Security**: HTTP-only cookies with secure and sameSite settings
+- **Database Security**: Prisma ORM for SQL injection prevention, field length constraints
 - **Input Validation**: Comprehensive validation on both client and server
-- **Error Handling**: Secure error messages without information leakage
+- **Error Handling**: Generic client messages, detailed server-side logging
+
+### 🛡️ Public Route Security (Lead Submission)
+
+The lead submission endpoint `/api/leads` implements enterprise-grade security:
+
+#### Input Validation & Sanitization
+
+- **Server-side validation**: All inputs validated against strict schemas
+- **Data sanitization**: Trimming, type checking, and format validation
+- **Field constraints**: Length limits, character restrictions, required fields
+- **Categories validation**: Only allowed visa categories accepted
+
+#### File Upload Security
+
+- **Type restrictions**: Only PDF, DOC, DOCX, TXT files allowed
+- **Size limits**: Maximum 5MB file size
+- **MIME type validation**: Prevents malicious file uploads
+- **Safe processing**: Secure buffer handling
+
+#### Rate Limiting & DoS Protection
+
+- **Request limits**: 5 requests per 15 minutes per IP address
+- **HTTP 429 responses**: Proper rate limit exceeded handling
+- **Retry-After headers**: Client guidance for retry timing
+
+#### Security Headers
+
+- **XSS Protection**: `X-XSS-Protection: 1; mode=block`
+- **Clickjacking Prevention**: `X-Frame-Options: DENY`
+- **Content Type Validation**: `X-Content-Type-Options: nosniff`
+- **Referrer Policy**: `strict-origin-when-cross-origin`
+- **Permissions Policy**: Disabled camera, microphone, geolocation
+
+#### Error Handling
+
+- **Information hiding**: Generic error messages to clients
+- **Detailed logging**: Server-side error logging for debugging
+- **Status codes**: Proper HTTP status codes (400, 429, 500)
+
+### 🔒 Attack Vector Protection
+
+| Attack Type            | Protection Method                     | Status       |
+| ---------------------- | ------------------------------------- | ------------ |
+| SQL Injection          | Prisma ORM + Input validation         | ✅ Protected |
+| XSS                    | Input sanitization + Security headers | ✅ Protected |
+| File Upload Attacks    | Type/size/MIME validation             | ✅ Protected |
+| DoS/Spam               | Rate limiting (5 req/15min)           | ✅ Protected |
+| Information Disclosure | Generic error messages                | ✅ Protected |
+| Clickjacking           | X-Frame-Options header                | ✅ Protected |
+| MIME Sniffing          | X-Content-Type-Options header         | ✅ Protected |
+| Data Overflow          | Field length constraints              | ✅ Protected |
 
 ## 📁 Project Structure
 
@@ -198,9 +275,16 @@ alma-leads-nextjs/
 │   │   └── StatusFilter.tsx     # Status filter component
 │   ├── api/
 │   │   ├── admin/
-│   │   │   └── route.ts         # Admin API endpoints
+│   │   │   ├── route.ts         # Admin API endpoints
+│   │   │   └── logout/
+│   │   │       └── route.ts     # Logout API endpoint
+│   │   ├── auth/
+│   │   │   └── login/
+│   │   │       └── route.ts     # Login API endpoint
 │   │   └── leads/
-│   │       └── route.ts         # Lead submission API
+│   │       └── route.ts         # Secure lead submission API with validation
+│   ├── login/
+│   │   └── page.tsx             # Admin login page
 │   ├── thank-you/
 │   │   └── page.tsx             # Success page
 │   ├── layout.tsx               # Root layout
@@ -212,10 +296,13 @@ alma-leads-nextjs/
 │   │   ├── layoutRenderers.tsx  # Layout renderers
 │   │   ├── ValidationContext.tsx # Validation context
 │   │   └── leadFormSchema*.ts   # Form schemas
+│   ├── csrf.ts                  # CSRF protection utilities
 │   └── db.ts                    # Database configuration
 ├── prisma/
-│   ├── schema.prisma            # Database schema
+│   ├── schema.prisma            # Database schema with security constraints
 │   └── migrations/              # Database migrations
+├── middleware.ts                # Route protection and security
+└── next.config.js               # Next.js config with security headers
 ├── middleware.ts                # Route protection
 └── docker-compose.yml           # PostgreSQL setup
 ```
@@ -224,20 +311,37 @@ alma-leads-nextjs/
 
 ### Validation Layers
 
-1. **Schema Validation**: JsonForms schema-based validation
-2. **Custom Validation**: Field-specific validation functions
-3. **Real-time Feedback**: Immediate error display on user interaction
-4. **Progressive Enhancement**: Lenient during input, strict on submit
+1. **Client-side Schema Validation**: JsonForms schema-based validation
+2. **Server-side Validation**: Comprehensive backend validation with sanitization
+3. **Custom Validation**: Field-specific validation functions
+4. **Security Validation**: Rate limiting, file type checking, input sanitization
+5. **Real-time Feedback**: Immediate error display on user interaction
+6. **Progressive Enhancement**: Lenient during input, strict on submit
 
 ### Validation Rules
 
-- **Names**: Minimum 2 characters, letters/spaces/hyphens/apostrophes only
-- **Email**: Standard email format validation
-- **Country**: Required field
-- **Website**: Optional but must be valid URL format if provided
-- **Categories**: At least one visa category must be selected
-- **Reason**: Minimum 10 characters explanation
-- **Resume**: Optional file upload with proper file handling
+#### Client-side Validation
+
+- **Names**: Minimum 2 characters, maximum 50, letters/spaces/hyphens/apostrophes only
+- **Email**: Standard email format validation, maximum 100 characters
+- **Country**: Required field, 2-100 characters
+- **Website**: Optional, maximum 200 characters, valid URL format if provided
+- **Categories**: At least one visa category must be selected, validated against allowed list
+- **Reason**: Minimum 10 characters, maximum 1000 characters explanation
+
+#### Server-side Security Validation
+
+- **Input Sanitization**: Trimming, type checking, format validation
+- **File Upload Security**: PDF/DOC/DOCX/TXT only, 5MB maximum, MIME type validation
+- **Rate Limiting**: 5 requests per 15 minutes per IP address
+- **Data Constraints**: Database-level field length constraints
+- **Category Validation**: Strict checking against predefined visa categories
+
+### Security Features
+
+- **SQL Injection Prevention**: Prisma ORM with parameterized queries
+- **XSS Protection**: Input sanitization and security headers
+- **Error Information Protection**: Generic client messages, detailed server logging
 
 ## 🎯 Admin Dashboard Features
 
@@ -299,9 +403,11 @@ Once the development server is running, access the application at:
   - Submit leads for testing
 
 - **Admin Dashboard**: `http://localhost:3000/admin`
+  - Automatically redirects to login page if not authenticated
   - Login with credentials: `admin` / `password`
   - View and manage submitted leads
   - Test search, filtering, and editing features
+  - Use logout button to end session
 
 ### Environment Variables
 
@@ -323,11 +429,31 @@ npm start
 
 ### Production Considerations
 
+#### Database & Infrastructure
+
 - Set up proper environment variables
-- Configure PostgreSQL for production
+- Configure PostgreSQL for production with SSL/TLS
+- Run database migration: `npx prisma migrate deploy`
+
+#### Security & Authentication
+
 - Set up proper authentication secrets
-- Configure file upload limits
-- Set up monitoring and logging
+- Configure HTTPS/SSL certificates
+- Implement Redis-based rate limiting for horizontal scaling
+- Set up DDoS protection (Cloudflare, AWS WAF)
+
+#### File Upload & Storage
+
+- Configure file upload limits (currently 5MB)
+- Consider migrating to cloud storage (S3, CloudFlare R2)
+- Set up virus scanning for uploaded files
+
+#### Monitoring & Logging
+
+- Set up security event logging
+- Implement request monitoring and alerting
+- Configure error tracking (Sentry, LogRocket)
+- Set up performance monitoring
 
 ## 🧪 Testing Strategy
 

@@ -178,11 +178,24 @@ export default function Home() {
       if (res.ok) {
         router.push("/thank-you");
       } else {
-        // Handle HTTP error responses
-        const errorText = await res.text();
-        setSubmitError(
-          `Failed to submit form. Please try again. (Error: ${res.status})`
-        );
+        // Handle different types of errors
+        const errorData = await res.json().catch(() => null);
+
+        if (res.status === 429) {
+          setSubmitError(
+            "Too many submissions. Please wait before trying again."
+          );
+        } else if (res.status === 400 && errorData?.details) {
+          // Handle validation errors
+          const errors = Array.isArray(errorData.details)
+            ? errorData.details.join(", ")
+            : errorData.error;
+          setSubmitError(`Please fix the following: ${errors}`);
+        } else {
+          setSubmitError(
+            errorData?.error || "Failed to submit form. Please try again."
+          );
+        }
       }
     } catch (error) {
       // Handle network errors (server not running, connection issues, etc.)
