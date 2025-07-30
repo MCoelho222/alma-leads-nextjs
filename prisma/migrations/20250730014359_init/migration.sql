@@ -1,16 +1,18 @@
 -- CreateEnum
-CREATE TYPE "LeadStatus" AS ENUM ('NEW', 'IN_REVIEW', 'CLOSED');
+CREATE TYPE "public"."LeadStatus" AS ENUM ('PENDING', 'REACHED_OUT');
 
 -- CreateTable
-CREATE TABLE "Lead" (
+CREATE TABLE "public"."Lead" (
     "id" SERIAL NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
-    "countryInterest" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "website" TEXT NOT NULL,
+    "categories" TEXT[],
+    "resume" BYTEA,
     "reason" TEXT NOT NULL,
-    "status" "LeadStatus" NOT NULL DEFAULT 'NEW',
+    "status" "public"."LeadStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Lead_pkey" PRIMARY KEY ("id")
