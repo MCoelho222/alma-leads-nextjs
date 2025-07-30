@@ -1,5 +1,9 @@
 # Alma Lead Assessment - Next.js Application
 
+[![Test Pipeline](https://github.com/MCoelho222/alma-leads-nextjs/actions/workflows/test.yml/badge.svg)](https://github.com/MCoelho222/alma-leads-nextjs/actions/workflows/test.yml)
+[![Tests](https://img.shields.io/badge/tests-106%2F106%20passing-brightgreen)](https://github.com/MCoelho222/alma-leads-nextjs)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
+
 A modern lead capture and management system built with Next.js, featuring dynamic form validation, enterprise-grade security, admin dashboard, and PostgreSQL database integration.
 
 ## ⚡ Quick Start
@@ -485,6 +489,16 @@ npm run test:coverage
 # Run specific test suite
 npm test -- __tests__/components/Home.test.tsx
 ```
+
+### CI/CD Pipeline 🚀
+
+**Automated testing** on every pull request with GitHub Actions:
+
+- **Pull Request Checks**: All tests must pass before merge
+- **Database Setup**: PostgreSQL service with health checks
+- **Security Scanning**: npm audit and TypeScript validation
+- **Build Verification**: Ensures production build succeeds
+- **Branch Protection**: Enforced quality gates
 
 ### Test Suites Overview
 

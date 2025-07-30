@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/yourusername/alma-leads-nextjs/security/advisories/new
+    about: Please report security vulnerabilities through GitHub Security Advisories
+  - name: General Question
+    url: https://github.com/yourusername/alma-leads-nextjs/discussions
+    about: Ask questions and discuss ideas in GitHub Discussions
