@@ -90,10 +90,7 @@ describe("Form Submission Integration Tests", () => {
     return formData;
   };
 
-  const createRequest = (
-    formData: FormData,
-    headers: Record<string, string> = {}
-  ) => {
+  const createRequest = (formData: FormData, headers: Record<string, string> = {}) => {
     // Use unique IP for each test to avoid rate limiting
     const uniqueIp = `192.168.1.${testCounter}`;
     return new NextRequest("http://localhost:3000/api/leads", {
@@ -215,9 +212,7 @@ describe("Form Submission Integration Tests", () => {
 
       expect(response.status).toBe(400);
       expect(result.error).toBe("Validation failed");
-      expect(result.details).toContain(
-        "First name must be between 2 and 50 characters"
-      );
+      expect(result.details).toContain("First name must be between 2 and 50 characters");
     });
 
     it("should reject fields that are too short", async () => {
@@ -237,21 +232,11 @@ describe("Form Submission Integration Tests", () => {
 
       expect(response.status).toBe(400);
       expect(result.error).toBe("Validation failed");
-      expect(result.details).toContain(
-        "First name must be between 2 and 50 characters"
-      );
-      expect(result.details).toContain(
-        "Last name must be between 2 and 50 characters"
-      );
-      expect(result.details).toContain(
-        "Email must be between 5 and 100 characters"
-      );
-      expect(result.details).toContain(
-        "Country must be between 2 and 100 characters"
-      );
-      expect(result.details).toContain(
-        "Reason must be between 10 and 1000 characters"
-      );
+      expect(result.details).toContain("First name must be between 2 and 50 characters");
+      expect(result.details).toContain("Last name must be between 2 and 50 characters");
+      expect(result.details).toContain("Email must be between 5 and 100 characters");
+      expect(result.details).toContain("Country must be between 2 and 100 characters");
+      expect(result.details).toContain("Reason must be between 10 and 1000 characters");
     });
   });
 
@@ -457,9 +442,7 @@ describe("Form Submission Integration Tests", () => {
   describe("Error Recovery Testing", () => {
     it("should handle database errors gracefully", async () => {
       const { prisma } = require("@/lib/db");
-      prisma.lead.create.mockRejectedValue(
-        new Error("Database connection failed")
-      );
+      prisma.lead.create.mockRejectedValue(new Error("Database connection failed"));
 
       const formData = createFormData({
         firstName: "John",
@@ -545,9 +528,7 @@ describe("Form Submission Integration Tests", () => {
 
       expect(response.status).toBe(400);
       expect(result.error).toBe("Validation failed");
-      expect(result.details).toContain(
-        "First name contains invalid characters"
-      );
+      expect(result.details).toContain("First name contains invalid characters");
       expect(result.details).toContain("Last name contains invalid characters");
     });
 

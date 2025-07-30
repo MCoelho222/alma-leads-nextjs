@@ -38,30 +38,22 @@ jest.mock("@jsonforms/react", () => ({
         <input
           data-testid="email"
           value={data.email || ""}
-          onChange={(e) =>
-            onChange({ data: { ...data, email: e.target.value }, errors: [] })
-          }
+          onChange={(e) => onChange({ data: { ...data, email: e.target.value }, errors: [] })}
         />
         <input
           data-testid="country"
           value={data.country || ""}
-          onChange={(e) =>
-            onChange({ data: { ...data, country: e.target.value }, errors: [] })
-          }
+          onChange={(e) => onChange({ data: { ...data, country: e.target.value }, errors: [] })}
         />
         <input
           data-testid="website"
           value={data.website || ""}
-          onChange={(e) =>
-            onChange({ data: { ...data, website: e.target.value }, errors: [] })
-          }
+          onChange={(e) => onChange({ data: { ...data, website: e.target.value }, errors: [] })}
         />
         <textarea
           data-testid="reason"
           value={data.reason || ""}
-          onChange={(e) =>
-            onChange({ data: { ...data, reason: e.target.value }, errors: [] })
-          }
+          onChange={(e) => onChange({ data: { ...data, reason: e.target.value }, errors: [] })}
         />
         <input
           data-testid="categories"
@@ -156,24 +148,29 @@ describe("Home Component - Form Submission", () => {
       email: "john.doe@example.com",
       country: "United States",
       website: "https://johndoe.com",
-      reason:
-        "I am seeking immigration assistance for my O-1 visa application.",
+      reason: "I am seeking immigration assistance for my O-1 visa application.",
       ...overrides,
     };
 
     // Fill form fields
-    if (defaultData.firstName)
+    if (defaultData.firstName) {
       await user.type(screen.getByTestId("firstName"), defaultData.firstName);
-    if (defaultData.lastName)
+    }
+    if (defaultData.lastName) {
       await user.type(screen.getByTestId("lastName"), defaultData.lastName);
-    if (defaultData.email)
+    }
+    if (defaultData.email) {
       await user.type(screen.getByTestId("email"), defaultData.email);
-    if (defaultData.country)
+    }
+    if (defaultData.country) {
       await user.type(screen.getByTestId("country"), defaultData.country);
-    if (defaultData.website)
+    }
+    if (defaultData.website) {
       await user.type(screen.getByTestId("website"), defaultData.website);
-    if (defaultData.reason)
+    }
+    if (defaultData.reason) {
       await user.type(screen.getByTestId("reason"), defaultData.reason);
+    }
 
     // Select category
     await user.click(screen.getByTestId("categories"));
@@ -373,12 +370,8 @@ describe("Home Component - Form Submission", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/Please fix the following:/)
-        ).toBeInTheDocument();
-        expect(
-          screen.getByText(/Invalid category selected/)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Please fix the following:/)).toBeInTheDocument();
+        expect(screen.getByText(/Invalid category selected/)).toBeInTheDocument();
       });
     });
 
@@ -402,9 +395,7 @@ describe("Home Component - Form Submission", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(
-            /Too many submissions. Please wait before trying again./
-          )
+          screen.getByText(/Too many submissions. Please wait before trying again./)
         ).toBeInTheDocument();
       });
     });
@@ -434,9 +425,7 @@ describe("Home Component - Form Submission", () => {
 
     it("should handle network errors", async () => {
       const user = userEvent.setup();
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error("Network error")
-      );
+      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
 
       render(<Home />);
 
@@ -447,9 +436,7 @@ describe("Home Component - Form Submission", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/Unable to connect to the server/)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Unable to connect to the server/)).toBeInTheDocument();
       });
     });
 
@@ -472,9 +459,7 @@ describe("Home Component - Form Submission", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/Failed to submit form. Please try again./)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Failed to submit form. Please try again./)).toBeInTheDocument();
       });
     });
   });

@@ -7,9 +7,7 @@ import { useDebounce } from "use-debounce";
 export default function SearchFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(
-    searchParams.get("search") || ""
-  );
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
 
   // Debounce the search term to avoid too many API calls
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);

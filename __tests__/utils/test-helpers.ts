@@ -110,11 +110,7 @@ export const mockFiles = {
     return createMockFile("max.pdf", "application/pdf", 5 * 1024 * 1024);
   },
   get justOverMax() {
-    return createMockFile(
-      "overmax.pdf",
-      "application/pdf",
-      5 * 1024 * 1024 + 1
-    );
+    return createMockFile("overmax.pdf", "application/pdf", 5 * 1024 * 1024 + 1);
   },
 };
 
@@ -138,18 +134,18 @@ export const createFormData = (data: TestFormData): FormData => {
   return formData;
 };
 
-export const mockFetchResponse = (
-  data: any,
-  status: number = 200,
-  ok: boolean = true
-) => ({
+export const mockFetchResponse = (data: any, status: number = 200, ok: boolean = true) => ({
   ok,
   status,
   json: async () => data,
   headers: {
     get: (name: string) => {
-      if (name === "Content-Type") return "application/json";
-      if (name === "Retry-After" && status === 429) return "900";
+      if (name === "Content-Type") {
+        return "application/json";
+      }
+      if (name === "Retry-After" && status === 429) {
+        return "900";
+      }
       return null;
     },
   },
@@ -159,9 +155,7 @@ export const mockFetchError = (message: string = "Network error") => {
   throw new Error(message);
 };
 
-export const waitForSubmission = async (
-  timeout: number = 5000
-): Promise<void> => {
+export const waitForSubmission = async (timeout: number = 5000): Promise<void> => {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new Error(`Submission timed out after ${timeout}ms`));

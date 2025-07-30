@@ -13,10 +13,7 @@ if (typeof File === "undefined") {
 
     arrayBuffer() {
       // Create a proper ArrayBuffer from the chunks
-      const totalSize = this.chunks.reduce(
-        (acc, chunk) => acc + (chunk.length || 0),
-        0
-      );
+      const totalSize = this.chunks.reduce((acc, chunk) => acc + (chunk.length || 0), 0);
       const buffer = new ArrayBuffer(totalSize);
       const view = new Uint8Array(buffer);
       let offset = 0;
@@ -123,9 +120,15 @@ global.File = class File {
   _calculateSize(fileBits) {
     if (Array.isArray(fileBits)) {
       return fileBits.reduce((total, bit) => {
-        if (typeof bit === "string") return total + bit.length;
-        if (bit instanceof ArrayBuffer) return total + bit.byteLength;
-        if (bit instanceof Uint8Array) return total + bit.length;
+        if (typeof bit === "string") {
+          return total + bit.length;
+        }
+        if (bit instanceof ArrayBuffer) {
+          return total + bit.byteLength;
+        }
+        if (bit instanceof Uint8Array) {
+          return total + bit.length;
+        }
         return total;
       }, 0);
     }
@@ -310,9 +313,15 @@ global.File = class File {
   _calculateSize(fileBits) {
     if (Array.isArray(fileBits)) {
       return fileBits.reduce((total, bit) => {
-        if (typeof bit === "string") return total + bit.length;
-        if (bit instanceof ArrayBuffer) return total + bit.byteLength;
-        if (bit instanceof Uint8Array) return total + bit.length;
+        if (typeof bit === "string") {
+          return total + bit.length;
+        }
+        if (bit instanceof ArrayBuffer) {
+          return total + bit.byteLength;
+        }
+        if (bit instanceof Uint8Array) {
+          return total + bit.length;
+        }
         return total;
       }, 0);
     }
@@ -371,10 +380,7 @@ global.File = class File {
 
   arrayBuffer() {
     // Create a proper ArrayBuffer from the chunks
-    const totalSize = this.chunks.reduce(
-      (acc, chunk) => acc + (chunk.length || 0),
-      0
-    );
+    const totalSize = this.chunks.reduce((acc, chunk) => acc + (chunk.length || 0), 0);
     const buffer = new ArrayBuffer(totalSize);
     const view = new Uint8Array(buffer);
     let offset = 0;

@@ -43,7 +43,9 @@ describe("/api/leads POST", () => {
       formData: async () => formData,
       headers: {
         get: (name: string) => {
-          if (name.toLowerCase() === "x-forwarded-for") return ip;
+          if (name.toLowerCase() === "x-forwarded-for") {
+            return ip;
+          }
           return headers[name.toLowerCase()] || null;
         },
       },
@@ -63,8 +65,7 @@ describe("/api/leads POST", () => {
         email: "john.doe@example.com",
         country: "United States",
         website: "https://johndoe.com",
-        reason:
-          "I am seeking immigration assistance for my O-1 visa application.",
+        reason: "I am seeking immigration assistance for my O-1 visa application.",
         categories: ["O-1", "EB-1A"],
       });
 
@@ -83,8 +84,7 @@ describe("/api/leads POST", () => {
           email: "john.doe@example.com",
           country: "United States",
           website: "https://johndoe.com",
-          reason:
-            "I am seeking immigration assistance for my O-1 visa application.",
+          reason: "I am seeking immigration assistance for my O-1 visa application.",
           categories: ["O-1", "EB-1A"],
           resume: null,
         },
@@ -181,9 +181,7 @@ describe("/api/leads POST", () => {
       expect(result.details).toContain("Email is required");
       expect(result.details).toContain("Country is required");
       expect(result.details).toContain("Reason is required");
-      expect(result.details).toContain(
-        "At least one category must be selected"
-      );
+      expect(result.details).toContain("At least one category must be selected");
     });
 
     it("should reject submission with invalid email format", async () => {
@@ -237,9 +235,7 @@ describe("/api/leads POST", () => {
       const result = await response.json();
 
       expect(response.status).toBe(400);
-      expect(result.details).toContain(
-        "First name contains invalid characters"
-      );
+      expect(result.details).toContain("First name contains invalid characters");
       expect(result.details).toContain("Last name contains invalid characters");
     });
 
@@ -258,9 +254,7 @@ describe("/api/leads POST", () => {
       const result = await response.json();
 
       expect(response.status).toBe(400);
-      expect(result.details).toContain(
-        "Reason must be between 10 and 1000 characters"
-      );
+      expect(result.details).toContain("Reason must be between 10 and 1000 characters");
     });
 
     it("should reject submission with too long fields", async () => {
@@ -278,15 +272,9 @@ describe("/api/leads POST", () => {
       const result = await response.json();
 
       expect(response.status).toBe(400);
-      expect(result.details).toContain(
-        "First name must be between 2 and 50 characters"
-      );
-      expect(result.details).toContain(
-        "Email must be between 5 and 100 characters"
-      );
-      expect(result.details).toContain(
-        "Reason must be between 10 and 1000 characters"
-      );
+      expect(result.details).toContain("First name must be between 2 and 50 characters");
+      expect(result.details).toContain("Email must be between 5 and 100 characters");
+      expect(result.details).toContain("Reason must be between 10 and 1000 characters");
     });
 
     it("should reject submission with invalid website URL", async () => {
@@ -353,9 +341,7 @@ describe("/api/leads POST", () => {
       const result = await response.json();
 
       expect(response.status).toBe(400);
-      expect(result.error).toBe(
-        "Only PDF, DOC, DOCX, and TXT files are allowed"
-      );
+      expect(result.error).toBe("Only PDF, DOC, DOCX, and TXT files are allowed");
     });
 
     it("should accept valid file types", async () => {

@@ -26,10 +26,7 @@ const FileUploadControl = ({
 
   return (
     <div className="mb-4">
-      <label
-        htmlFor="resume"
-        className="block text-sm font-medium text-gray-700 mb-1"
-      >
+      <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-1">
         Upload your resume
       </label>
       <input

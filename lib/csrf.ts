@@ -5,13 +5,12 @@ export function generateCSRFToken(): string {
   return crypto.randomBytes(32).toString("hex");
 }
 
-export function validateCSRFToken(
-  token: string,
-  sessionToken: string
-): boolean {
+export function validateCSRFToken(token: string, sessionToken: string): boolean {
   // In a real application, you'd store the token in a session or database
   // For simplicity, we're using a basic time-based validation
-  if (!token || !sessionToken) return false;
+  if (!token || !sessionToken) {
+    return false;
+  }
 
   try {
     // Basic validation - in production, use proper session management

@@ -40,9 +40,7 @@ const TextInputControl = ({
         placeholder={placeholder}
         required={isRequired}
         disabled={!enabled}
-        className={`input ${
-          hasErrors ? "input-error-explicit border-red-500" : ""
-        }`}
+        className={`input ${hasErrors ? "input-error-explicit border-red-500" : ""}`}
         onChange={(event) => handleChange(path, event.target.value)}
       />
       {hasErrors && (
@@ -55,14 +53,7 @@ const TextInputControl = ({
 };
 
 // Textarea Control
-const TextAreaControl = ({
-  data,
-  handleChange,
-  path,
-  schema,
-  uischema,
-  enabled,
-}: ControlProps) => {
+const TextAreaControl = ({ data, handleChange, path, schema, uischema, enabled }: ControlProps) => {
   const { fieldErrors, hasAttemptedSubmit } = useValidation();
   const placeholder = uischema?.options?.placeholder || "";
   const isRequired = schema.minLength === 1;
@@ -109,10 +100,7 @@ const FileUploadControl = ({
 
   return (
     <div>
-      <label
-        htmlFor={fieldId}
-        className="block text-sm font-medium text-gray-700 mb-1"
-      >
+      <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 mb-1">
         Upload your resume
       </label>
       <input
@@ -136,16 +124,12 @@ const IconControl = ({ uischema }: ControlProps) => {
   const iconSrc = uischema?.options?.iconSrc;
   const iconAlt = uischema?.options?.iconAlt || "Icon";
 
-  if (!iconSrc) return null;
+  if (!iconSrc) {
+    return null;
+  }
 
   return (
-    <Image
-      src={iconSrc}
-      alt={iconAlt}
-      width={64}
-      height={64}
-      className="mx-auto mb-3 sm:mb-4"
-    />
+    <Image src={iconSrc} alt={iconAlt} width={64} height={64} className="mx-auto mb-3 sm:mb-4" />
   );
 };
 
@@ -188,9 +172,7 @@ const CheckboxArrayControl = ({
 
   return (
     <fieldset>
-      <legend className="text-lg sm:text-xl font-bold mb-4 text-center">
-        {schema.title}
-      </legend>
+      <legend className="text-lg sm:text-xl font-bold mb-4 text-center">{schema.title}</legend>
       <div>
         {options.map((option: string, index: number) => (
           <label
@@ -229,16 +211,12 @@ const CheckboxArrayControl = ({
 export const textInputControlTester = rankWith(3, isStringControl);
 export const textInputControl = withJsonFormsControlProps(TextInputControl);
 
-export const textAreaControlTester = rankWith(
-  10,
-  (uischema, schema, context) => {
-    return (
-      isStringControl(uischema, schema, context) &&
-      (isMultiLineControl(uischema, schema, context) ||
-        (uischema?.options as any)?.multi === true)
-    );
-  }
-);
+export const textAreaControlTester = rankWith(10, (uischema, schema, context) => {
+  return (
+    isStringControl(uischema, schema, context) &&
+    (isMultiLineControl(uischema, schema, context) || (uischema?.options as any)?.multi === true)
+  );
+});
 export const textAreaControl = withJsonFormsControlProps(TextAreaControl);
 
 export const fileUploadControlTester = rankWith(
@@ -275,5 +253,4 @@ export const checkboxArrayControlTester = rankWith(
     })
   )
 );
-export const checkboxArrayControl =
-  withJsonFormsControlProps(CheckboxArrayControl);
+export const checkboxArrayControl = withJsonFormsControlProps(CheckboxArrayControl);

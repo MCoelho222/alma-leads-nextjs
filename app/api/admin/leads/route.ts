@@ -48,9 +48,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Error fetching leads:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch leads" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch leads" }, { status: 500 });
   }
 }

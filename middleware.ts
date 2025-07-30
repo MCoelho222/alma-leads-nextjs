@@ -15,10 +15,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Check API admin routes - accept both cookie and basic auth (except logout)
-  if (
-    url.pathname.startsWith("/api/admin") &&
-    !url.pathname.startsWith("/api/admin/logout")
-  ) {
+  if (url.pathname.startsWith("/api/admin") && !url.pathname.startsWith("/api/admin/logout")) {
     // First check for cookie authentication (if user is logged in)
     const authCookie = request.cookies.get("admin-auth");
     if (authCookie && authCookie.value === "authenticated") {

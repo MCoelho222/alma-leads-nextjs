@@ -21,12 +21,7 @@ interface EditLeadModalProps {
   onSave: (updatedLead: Lead) => void;
 }
 
-export default function EditLeadModal({
-  lead,
-  isOpen,
-  onClose,
-  onSave,
-}: EditLeadModalProps) {
+export default function EditLeadModal({ lead, isOpen, onClose, onSave }: EditLeadModalProps) {
   const [formData, setFormData] = useState<Lead | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -38,7 +33,9 @@ export default function EditLeadModal({
     }
   }, [lead]);
 
-  if (!isOpen || !lead || !formData) return null;
+  if (!isOpen || !lead || !formData) {
+    return null;
+  }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -51,10 +48,7 @@ export default function EditLeadModal({
       newErrors.lastName = "Last name must be at least 2 characters";
     }
 
-    if (
-      !formData.email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-    ) {
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
 
@@ -133,9 +127,7 @@ export default function EditLeadModal({
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">
-              Edit Lead Information
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900">Edit Lead Information</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 text-2xl"
@@ -148,73 +140,55 @@ export default function EditLeadModal({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* First Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
               <input
                 type="text"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange("firstName", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {errors.firstName && (
-                <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>
-              )}
+              {errors.firstName && <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>}
             </div>
 
             {/* Last Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
               <input
                 type="text"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange("lastName", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {errors.lastName && (
-                <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>
-              )}
+              {errors.lastName && <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>}
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {errors.email && (
-                <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-              )}
+              {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
             </div>
 
             {/* Country */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Country *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
               <input
                 type="text"
                 value={formData.country}
                 onChange={(e) => handleInputChange("country", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {errors.country && (
-                <p className="text-red-600 text-sm mt-1">{errors.country}</p>
-              )}
+              {errors.country && <p className="text-red-600 text-sm mt-1">{errors.country}</p>}
             </div>
 
             {/* Website */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Website
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
               <input
                 type="text"
                 value={formData.website}
@@ -222,9 +196,7 @@ export default function EditLeadModal({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="https://example.com"
               />
-              {errors.website && (
-                <p className="text-red-600 text-sm mt-1">{errors.website}</p>
-              )}
+              {errors.website && <p className="text-red-600 text-sm mt-1">{errors.website}</p>}
             </div>
 
             {/* Categories */}
@@ -257,9 +229,7 @@ export default function EditLeadModal({
 
             {/* Reason */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Reason *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Reason *</label>
               <textarea
                 value={formData.reason}
                 onChange={(e) => handleInputChange("reason", e.target.value)}
@@ -267,16 +237,12 @@ export default function EditLeadModal({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Please explain your reason..."
               />
-              {errors.reason && (
-                <p className="text-red-600 text-sm mt-1">{errors.reason}</p>
-              )}
+              {errors.reason && <p className="text-red-600 text-sm mt-1">{errors.reason}</p>}
             </div>
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
               <select
                 value={formData.status}
                 onChange={(e) => handleInputChange("status", e.target.value)}
@@ -289,9 +255,7 @@ export default function EditLeadModal({
 
             {/* Created Date (Read-only) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Created Date
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Created Date</label>
               <input
                 type="text"
                 value={new Date(formData.createdAt).toLocaleDateString()}
