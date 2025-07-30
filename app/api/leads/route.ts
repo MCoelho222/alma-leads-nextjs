@@ -13,7 +13,7 @@ const validateInput = (data: any): { isValid: boolean; errors: string[] } => {
     if (trimmed.length < 2 || trimmed.length > 50) {
       errors.push("First name must be between 2 and 50 characters");
     }
-    if (!/^[a-zA-Z\s'-]+$/.test(trimmed)) {
+    if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(trimmed)) {
       errors.push("First name contains invalid characters");
     }
   }
@@ -26,7 +26,7 @@ const validateInput = (data: any): { isValid: boolean; errors: string[] } => {
     if (trimmed.length < 2 || trimmed.length > 50) {
       errors.push("Last name must be between 2 and 50 characters");
     }
-    if (!/^[a-zA-Z\s'-]+$/.test(trimmed)) {
+    if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(trimmed)) {
       errors.push("Last name contains invalid characters");
     }
   }
