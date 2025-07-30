@@ -14,13 +14,19 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Check API admin routes - still need basic auth for API calls (except logout)
+  // Check API admin routes - accept both cookie and basic auth (except logout)
   if (
     url.pathname.startsWith("/api/admin") &&
     !url.pathname.startsWith("/api/admin/logout")
   ) {
-    const basicAuth = request.headers.get("authorization");
+    // First check for cookie authentication (if user is logged in)
+    const authCookie = request.cookies.get("admin-auth");
+    if (authCookie && authCookie.value === "authenticated") {
+      return NextResponse.next();
+    }
 
+    // Fallback to basic auth for API clients
+    const basicAuth = request.headers.get("authorization");
     if (basicAuth) {
       const authValue = basicAuth.split(" ")[1];
       const [user, password] = atob(authValue).split(":");

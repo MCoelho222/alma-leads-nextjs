@@ -326,7 +326,7 @@ alma-leads-nextjs/
 - **Email**: Standard email format validation, maximum 100 characters
 - **Country**: Required field, 2-100 characters
 - **Website**: Optional, maximum 200 characters, valid URL format if provided
-- **Categories**: At least one visa category must be selected, validated against allowed list
+- **Categories**: At least one visa category must be selected, validated against allowed list (O-1, EB-1A, EB-2 NIW, I don't know)
 - **Reason**: Minimum 10 characters, maximum 1000 characters explanation
 
 #### Server-side Security Validation
@@ -335,7 +335,7 @@ alma-leads-nextjs/
 - **File Upload Security**: PDF/DOC/DOCX/TXT only, 5MB maximum, MIME type validation
 - **Rate Limiting**: 5 requests per 15 minutes per IP address
 - **Data Constraints**: Database-level field length constraints
-- **Category Validation**: Strict checking against predefined visa categories
+- **Category Validation**: Strict checking against predefined visa categories (O-1, EB-1A, EB-2 NIW, I don't know)
 
 ### Security Features
 
