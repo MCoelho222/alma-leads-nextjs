@@ -27,7 +27,7 @@ export default function StatusFilter() {
     <select
       value={searchParams.get("status") || ""}
       onChange={handleStatusChange}
-      className="border px-3 py-2 rounded"
+      className="border px-3 py-2 rounded w-full sm:w-auto text-sm lg:text-base"
     >
       <option value="">All Statuses</option>
       <option value="PENDING">Pending</option>

@@ -32,7 +32,7 @@ export default function SearchFilter() {
   }, [debouncedSearchTerm, router, searchParams]);
 
   return (
-    <div className="relative w-64">
+    <div className="relative w-full sm:w-64">
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg
           className="w-4 h-4 text-gray-400"
@@ -54,7 +54,7 @@ export default function SearchFilter() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search..."
-        className="border px-3 py-2 pl-10 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="border px-3 py-2 pl-10 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm lg:text-base"
       />
     </div>
   );

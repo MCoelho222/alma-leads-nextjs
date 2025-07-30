@@ -20,3 +20,42 @@ export async function POST(req: Request) {
   const referer = req.headers.get("referer") || "/admin";
   return NextResponse.redirect(referer);
 }
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const {
+      id,
+      firstName,
+      lastName,
+      email,
+      country,
+      website,
+      categories,
+      reason,
+      status,
+    } = body;
+
+    const updatedLead = await prisma.lead.update({
+      where: { id: Number(id) },
+      data: {
+        firstName,
+        lastName,
+        email,
+        country,
+        website,
+        categories,
+        reason,
+        status,
+      },
+    });
+
+    return NextResponse.json(updatedLead);
+  } catch (error) {
+    console.error("Error updating lead:", error);
+    return NextResponse.json(
+      { error: "Failed to update lead" },
+      { status: 500 }
+    );
+  }
+}
