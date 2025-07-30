@@ -85,15 +85,7 @@ const validateInput = (data: any): { isValid: boolean; errors: string[] } => {
   if (!Array.isArray(data.categories) || data.categories.length === 0) {
     errors.push("At least one category must be selected");
   } else {
-    const validCategories = [
-      "Employment Based (EB-1, EB-2, EB-3)",
-      "Family Based (F-1, F-2A, F-2B, F-3, F-4)",
-      "Investor Visas (EB-5)",
-      "Student Visas (F-1)",
-      "Visitor/Tourist Visas (B-1/B-2)",
-      "Work Visas (H-1B, L-1, O-1, etc.)",
-      "Other",
-    ];
+    const validCategories = ["O-1", "EB-1A", "EB-2 NIW", "I don't know"];
 
     for (const category of data.categories) {
       if (typeof category !== "string" || !validCategories.includes(category)) {
