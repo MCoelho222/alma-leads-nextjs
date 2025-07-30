@@ -75,16 +75,14 @@ export default function Home() {
     if (!data.firstName || data.firstName.trim().length < 2) {
       errors.firstName = "First name must be at least 2 characters";
     } else if (!/^[a-zA-Z\s'-]+$/.test(data.firstName)) {
-      errors.firstName =
-        "First name can only contain letters, spaces, hyphens, and apostrophes";
+      errors.firstName = "First name can only contain letters, spaces, hyphens, and apostrophes";
     }
 
     // Last name validation
     if (!data.lastName || data.lastName.trim().length < 2) {
       errors.lastName = "Last name must be at least 2 characters";
     } else if (!/^[a-zA-Z\s'-]+$/.test(data.lastName)) {
-      errors.lastName =
-        "Last name can only contain letters, spaces, hyphens, and apostrophes";
+      errors.lastName = "Last name can only contain letters, spaces, hyphens, and apostrophes";
     }
 
     // Email validation
@@ -101,15 +99,11 @@ export default function Home() {
 
     // Website validation (optional but must be valid URL if provided)
     if (data.website && data.website.trim().length > 0) {
-      const urlPattern =
-        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
       const simpleUrlPattern =
         /^(https?:\/\/)?(www\.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}(\/.*)?$/;
 
-      if (
-        !urlPattern.test(data.website.trim()) &&
-        !simpleUrlPattern.test(data.website.trim())
-      ) {
+      if (!urlPattern.test(data.website.trim()) && !simpleUrlPattern.test(data.website.trim())) {
         errors.website =
           "Please enter a valid URL (e.g., https://example.com or www.linkedin.com/in/yourname)";
       }
@@ -122,8 +116,7 @@ export default function Home() {
 
     // Reason validation
     if (!data.reason || data.reason.trim().length < 10) {
-      errors.reason =
-        "Please provide at least 10 characters explaining your reason";
+      errors.reason = "Please provide at least 10 characters explaining your reason";
     }
 
     return errors;
@@ -182,9 +175,7 @@ export default function Home() {
         const errorData = await res.json().catch(() => null);
 
         if (res.status === 429) {
-          setSubmitError(
-            "Too many submissions. Please wait before trying again."
-          );
+          setSubmitError("Too many submissions. Please wait before trying again.");
         } else if (res.status === 400 && errorData?.details) {
           // Handle validation errors
           const errors = Array.isArray(errorData.details)
@@ -192,9 +183,7 @@ export default function Home() {
             : errorData.error;
           setSubmitError(`Please fix the following: ${errors}`);
         } else {
-          setSubmitError(
-            errorData?.error || "Failed to submit form. Please try again."
-          );
+          setSubmitError(errorData?.error || "Failed to submit form. Please try again.");
         }
       }
     } catch (error) {
@@ -235,9 +224,8 @@ export default function Home() {
         <div className="relative">
           <div className="absolute left-1/2 transform -translate-x-1/2 w-[calc(100vw-2rem)] sm:w-[calc(768px-3rem)] max-w-none">
             <p className="text-center font-bold text-xs sm:text-sm px-4">
-              Submit the form below and our team of experienced attorneys will
-              review your information and send a preliminary assessment of your
-              case based on your goals.
+              Submit the form below and our team of experienced attorneys will review your
+              information and send a preliminary assessment of your case based on your goals.
             </p>
           </div>
           <div className="h-12 sm:h-16"></div>
@@ -245,15 +233,10 @@ export default function Home() {
       </div>
       <div className="max-w-xl mx-auto px-4 sm:px-6 pb-4 sm:pb-6">
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-          <ValidationProvider
-            fieldErrors={fieldErrors}
-            hasAttemptedSubmit={hasAttemptedSubmit}
-          >
+          <ValidationProvider fieldErrors={fieldErrors} hasAttemptedSubmit={hasAttemptedSubmit}>
             <JsonForms
               key={hasAttemptedSubmit ? "validation" : "lenient"}
-              schema={
-                hasAttemptedSubmit ? leadFormSchema : leadFormSchemaLenient
-              }
+              schema={hasAttemptedSubmit ? leadFormSchema : leadFormSchemaLenient}
               uischema={leadFormUISchema}
               data={formData}
               renderers={renderers}
@@ -270,11 +253,7 @@ export default function Home() {
             <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-red-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fillRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"

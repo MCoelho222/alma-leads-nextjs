@@ -110,8 +110,7 @@ function AdminContent() {
       <aside
         className="w-full lg:w-60 bg-gradient-to-br from-yellow-50 via-yellow-25 to-white p-4 lg:p-6 border-r lg:border-r border-b lg:border-b-0 relative"
         style={{
-          background:
-            "linear-gradient(to bottom right, #fffbeb, #fefce8, #ffffff)",
+          background: "linear-gradient(to bottom right, #fffbeb, #fefce8, #ffffff)",
         }}
       >
         <h1 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8">alma</h1>
@@ -204,52 +203,33 @@ function AdminContent() {
             <table className="w-full text-sm text-left min-w-[700px]">
               <thead className="bg-gray-100 text-gray-500 text-xs lg:text-sm">
                 <tr>
-                  {["Name", "Submitted", "Status", "Country"].map(
-                    (label, i) => {
-                      const fields = [
-                        "firstName",
-                        "createdAt",
-                        "status",
-                        "country",
-                      ];
-                      const field = fields[i];
-                      const isActive = sort.startsWith(field);
-                      const dir =
-                        isActive && sort.endsWith("asc") ? "desc" : "asc";
-                      const href = `?search=${search}&status=${status}&sort=${field}:${dir}&page=1`;
-                      return (
-                        <th key={field} className="px-2 lg:px-4 py-3">
-                          <Link href={href} className="hover:underline">
-                            {label}{" "}
-                            {isActive
-                              ? sort.endsWith("asc")
-                                ? "↑"
-                                : "↓"
-                              : "↓"}
-                          </Link>
-                        </th>
-                      );
-                    }
-                  )}
+                  {["Name", "Submitted", "Status", "Country"].map((label, i) => {
+                    const fields = ["firstName", "createdAt", "status", "country"];
+                    const field = fields[i];
+                    const isActive = sort.startsWith(field);
+                    const dir = isActive && sort.endsWith("asc") ? "desc" : "asc";
+                    const href = `?search=${search}&status=${status}&sort=${field}:${dir}&page=1`;
+                    return (
+                      <th key={field} className="px-2 lg:px-4 py-3">
+                        <Link href={href} className="hover:underline">
+                          {label} {isActive ? (sort.endsWith("asc") ? "↑" : "↓") : "↓"}
+                        </Link>
+                      </th>
+                    );
+                  })}
                   <th className="px-2 lg:px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-2 lg:px-4 py-8 text-center text-gray-500"
-                    >
+                    <td colSpan={5} className="px-2 lg:px-4 py-8 text-center text-gray-500">
                       Loading...
                     </td>
                   </tr>
                 ) : leads.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-2 lg:px-4 py-8 text-center text-gray-500"
-                    >
+                    <td colSpan={5} className="px-2 lg:px-4 py-8 text-center text-gray-500">
                       No leads found
                     </td>
                   </tr>
@@ -272,52 +252,31 @@ function AdminContent() {
                         </span>
                       </td>
                       <td className="px-2 lg:px-4 py-3">
-                        {lead.status === "REACHED_OUT"
-                          ? "Reached Out"
-                          : "Pending"}
+                        {lead.status === "REACHED_OUT" ? "Reached Out" : "Pending"}
                       </td>
                       <td className="px-2 lg:px-4 py-3">{lead.country}</td>
-                      <td
-                        className="px-2 lg:px-4 py-3"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <form
-                          action="/api/admin"
-                          method="POST"
-                          className="inline"
-                        >
+                      <td className="px-2 lg:px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                        <form action="/api/admin" method="POST" className="inline">
                           <input type="hidden" name="id" value={lead.id} />
                           {lead.status === "REACHED_OUT" ? (
                             <>
-                              <input
-                                type="hidden"
-                                name="status"
-                                value="PENDING"
-                              />
+                              <input type="hidden" name="status" value="PENDING" />
                               <button
                                 type="submit"
                                 className="text-xs px-2 lg:px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
                               >
-                                <span className="hidden sm:inline">
-                                  Mark as Pending
-                                </span>
+                                <span className="hidden sm:inline">Mark as Pending</span>
                                 <span className="sm:hidden">Pending</span>
                               </button>
                             </>
                           ) : (
                             <>
-                              <input
-                                type="hidden"
-                                name="status"
-                                value="REACHED_OUT"
-                              />
+                              <input type="hidden" name="status" value="REACHED_OUT" />
                               <button
                                 type="submit"
                                 className="text-xs px-2 lg:px-3 py-1 bg-black text-white rounded hover:bg-gray-800"
                               >
-                                <span className="hidden sm:inline">
-                                  Mark as Reached Out
-                                </span>
+                                <span className="hidden sm:inline">Mark as Reached Out</span>
                                 <span className="sm:hidden">Reached</span>
                               </button>
                             </>
@@ -345,36 +304,32 @@ function AdminContent() {
                 },
               }}
               className={`text-base lg:text-lg px-2 lg:px-0 ${
-                page <= 1
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-600 hover:text-black"
+                page <= 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-black"
               }`}
             >
               &lt;
             </Link>
 
             {/* Page Numbers */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNum) => (
-                <Link
-                  key={pageNum}
-                  href={{
-                    pathname: "/admin",
-                    query: {
-                      ...Object.fromEntries(searchParams.entries()),
-                      page: pageNum.toString(),
-                    },
-                  }}
-                  className={`text-sm w-8 h-8 lg:w-6 lg:h-6 flex items-center justify-center ${
-                    page === pageNum
-                      ? "font-bold text-black border border-gray-400"
-                      : "text-gray-600 hover:text-black"
-                  }`}
-                >
-                  {pageNum}
-                </Link>
-              )
-            )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <Link
+                key={pageNum}
+                href={{
+                  pathname: "/admin",
+                  query: {
+                    ...Object.fromEntries(searchParams.entries()),
+                    page: pageNum.toString(),
+                  },
+                }}
+                className={`text-sm w-8 h-8 lg:w-6 lg:h-6 flex items-center justify-center ${
+                  page === pageNum
+                    ? "font-bold text-black border border-gray-400"
+                    : "text-gray-600 hover:text-black"
+                }`}
+              >
+                {pageNum}
+              </Link>
+            ))}
 
             {/* Next Arrow */}
             <Link

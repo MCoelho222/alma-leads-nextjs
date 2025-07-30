@@ -70,12 +70,5 @@ export const leadFormSchema: JsonSchema = {
       maxLength: 2000,
     },
   },
-  required: [
-    "firstName",
-    "lastName",
-    "email",
-    "country",
-    "categories",
-    "reason",
-  ],
+  required: ["firstName", "lastName", "email", "country", "categories", "reason"],
 };

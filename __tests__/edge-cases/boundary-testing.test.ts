@@ -8,16 +8,11 @@ describe("Form Submission Edge Cases", () => {
     // Test field length boundaries
     it("should handle minimum valid field lengths", () => {
       const validations = {
-        firstName: (value: string) =>
-          value.trim().length >= 2 && value.trim().length <= 50,
-        lastName: (value: string) =>
-          value.trim().length >= 2 && value.trim().length <= 50,
-        email: (value: string) =>
-          value.trim().length >= 5 && value.trim().length <= 100,
-        country: (value: string) =>
-          value.trim().length >= 2 && value.trim().length <= 100,
-        reason: (value: string) =>
-          value.trim().length >= 10 && value.trim().length <= 1000,
+        firstName: (value: string) => value.trim().length >= 2 && value.trim().length <= 50,
+        lastName: (value: string) => value.trim().length >= 2 && value.trim().length <= 50,
+        email: (value: string) => value.trim().length >= 5 && value.trim().length <= 100,
+        country: (value: string) => value.trim().length >= 2 && value.trim().length <= 100,
+        reason: (value: string) => value.trim().length >= 10 && value.trim().length <= 1000,
       };
 
       // Test minimum valid lengths
@@ -37,16 +32,11 @@ describe("Form Submission Edge Cases", () => {
 
     it("should handle maximum valid field lengths", () => {
       const validations = {
-        firstName: (value: string) =>
-          value.trim().length >= 2 && value.trim().length <= 50,
-        lastName: (value: string) =>
-          value.trim().length >= 2 && value.trim().length <= 50,
-        email: (value: string) =>
-          value.trim().length >= 5 && value.trim().length <= 100,
-        country: (value: string) =>
-          value.trim().length >= 2 && value.trim().length <= 100,
-        reason: (value: string) =>
-          value.trim().length >= 10 && value.trim().length <= 1000,
+        firstName: (value: string) => value.trim().length >= 2 && value.trim().length <= 50,
+        lastName: (value: string) => value.trim().length >= 2 && value.trim().length <= 50,
+        email: (value: string) => value.trim().length >= 5 && value.trim().length <= 100,
+        country: (value: string) => value.trim().length >= 2 && value.trim().length <= 100,
+        reason: (value: string) => value.trim().length >= 10 && value.trim().length <= 1000,
       };
 
       // Test maximum valid lengths
@@ -139,7 +129,9 @@ describe("Form Submission Edge Cases", () => {
 
   describe("URL Validation Edge Cases", () => {
     const validateURL = (url: string): boolean => {
-      if (!url || url.trim().length === 0) return true; // Optional field
+      if (!url || url.trim().length === 0) {
+        return true;
+      } // Optional field
 
       const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
       const simplePattern =
@@ -172,10 +164,7 @@ describe("Form Submission Edge Cases", () => {
   describe("Category Validation Edge Cases", () => {
     const validateCategories = (categories: string[]): boolean => {
       const validCategories = ["O-1", "EB-1A", "EB-2 NIW", "I don't know"];
-      return (
-        categories.length > 0 &&
-        categories.every((cat) => validCategories.includes(cat))
-      );
+      return categories.length > 0 && categories.every((cat) => validCategories.includes(cat));
     };
 
     it("should handle various category combinations", () => {
@@ -225,9 +214,7 @@ describe("Form Submission Edge Cases", () => {
       expect(validateFileType("application/pdf")).toBe(true);
       expect(validateFileType("application/msword")).toBe(true);
       expect(
-        validateFileType(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+        validateFileType("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
       ).toBe(true);
       expect(validateFileType("text/plain")).toBe(true);
 
@@ -267,9 +254,7 @@ describe("Form Submission Edge Cases", () => {
       // Leading/trailing whitespace
       expect(sanitizeInput("  text  ")).toBe("text");
       expect(sanitizeInput("\t\ntext\t\n")).toBe("text");
-      expect(sanitizeInput("   multiple   spaces   ")).toBe(
-        "multiple   spaces"
-      );
+      expect(sanitizeInput("   multiple   spaces   ")).toBe("multiple   spaces");
 
       // Special whitespace characters
       expect(sanitizeInput("\u00A0text\u00A0")).toBe("text"); // Non-breaking space
@@ -279,9 +264,7 @@ describe("Form Submission Edge Cases", () => {
     it("should normalize email addresses consistently", () => {
       // Case normalization
       expect(normalizeEmail("TEST@EXAMPLE.COM")).toBe("test@example.com");
-      expect(normalizeEmail("User.Name@DOMAIN.COM")).toBe(
-        "user.name@domain.com"
-      );
+      expect(normalizeEmail("User.Name@DOMAIN.COM")).toBe("user.name@domain.com");
 
       // Combined whitespace and case
       expect(normalizeEmail("  USER@EXAMPLE.COM  ")).toBe("user@example.com");
@@ -309,9 +292,7 @@ describe("Form Submission Edge Cases", () => {
       return {
         isAllowed: (ip: string, now: number = Date.now()): boolean => {
           const userRequests = requests.get(ip) || [];
-          const recentRequests = userRequests.filter(
-            (time: number) => now - time < WINDOW_MS
-          );
+          const recentRequests = userRequests.filter((time: number) => now - time < WINDOW_MS);
 
           if (recentRequests.length >= MAX_REQUESTS) {
             return false;

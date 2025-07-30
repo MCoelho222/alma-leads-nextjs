@@ -84,18 +84,12 @@ const createCompleteValidationSuite = () => {
       }
 
       // Categories validation
-      if (
-        !Array.isArray(formData.categories) ||
-        formData.categories.length === 0
-      ) {
+      if (!Array.isArray(formData.categories) || formData.categories.length === 0) {
         errors.push("At least one category must be selected");
       } else {
         const validCategories = ["O-1", "EB-1A", "EB-2 NIW", "I don't know"];
         for (const category of formData.categories) {
-          if (
-            typeof category !== "string" ||
-            !validCategories.includes(category)
-          ) {
+          if (typeof category !== "string" || !validCategories.includes(category)) {
             errors.push("Invalid category selected");
             break;
           }
@@ -230,9 +224,7 @@ describe("Real-World Form Submission Scenarios", () => {
 
       const result = validator.validateForm(briefForm);
       expect(result.isValid).toBe(false);
-      expect(result.errors).toContain(
-        "Reason must be between 10 and 1000 characters"
-      );
+      expect(result.errors).toContain("Reason must be between 10 and 1000 characters");
     });
 
     it("should catch invalid website URLs", () => {
@@ -292,8 +284,7 @@ describe("Real-World Form Submission Scenarios", () => {
         lastName: "O'Sullivan-Smith",
         email: "maryjane@example.com",
         country: "Ireland",
-        reason:
-          "I am seeking immigration assistance for my application process",
+        reason: "I am seeking immigration assistance for my application process",
         categories: ["O-1"],
       };
 
@@ -338,11 +329,7 @@ describe("Real-World Form Submission Scenarios", () => {
   });
 
   describe("File Upload Scenarios", () => {
-    const validateFileUpload = (file: {
-      name: string;
-      type: string;
-      size: number;
-    }) => {
+    const validateFileUpload = (file: { name: string; type: string; size: number }) => {
       const errors: string[] = [];
       const maxSize = 5 * 1024 * 1024; // 5MB
       const allowedTypes = [
@@ -400,9 +387,7 @@ describe("Real-World Form Submission Scenarios", () => {
       invalidFiles.forEach((file) => {
         const result = validateFileUpload(file);
         expect(result.isValid).toBe(false);
-        expect(result.errors).toContain(
-          "Only PDF, DOC, DOCX, and TXT files are allowed"
-        );
+        expect(result.errors).toContain("Only PDF, DOC, DOCX, and TXT files are allowed");
       });
     });
 

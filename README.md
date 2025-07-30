@@ -415,7 +415,6 @@ npm run dev
 Once the development server is running, access the application at:
 
 - **Public Lead Form**: `http://localhost:3000/`
-
   - Fill out the lead submission form
   - Test file upload functionality
   - Submit leads for testing

@@ -126,9 +126,7 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_MAX_REQUESTS = 5; // 5 requests per 15 minutes
 
-const checkRateLimit = (
-  ip: string
-): { allowed: boolean; resetTime?: number } => {
+const checkRateLimit = (ip: string): { allowed: boolean; resetTime?: number } => {
   const now = Date.now();
   const userLimit = rateLimitMap.get(ip);
 
@@ -160,9 +158,7 @@ export async function POST(req: Request) {
         {
           status: 429,
           headers: {
-            "Retry-After": Math.ceil(
-              (rateLimitResult.resetTime! - Date.now()) / 1000
-            ).toString(),
+            "Retry-After": Math.ceil((rateLimitResult.resetTime! - Date.now()) / 1000).toString(),
           },
         }
       );
@@ -176,10 +172,7 @@ export async function POST(req: Request) {
     if (file && file.size > 0) {
       const fileValidation = validateFile(file);
       if (!fileValidation.isValid) {
-        return NextResponse.json(
-          { error: fileValidation.error },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: fileValidation.error }, { status: 400 });
       }
       buffer = Buffer.from(await file.arrayBuffer());
     }
@@ -236,8 +229,7 @@ export async function POST(req: Request) {
     // Return generic error message to client (security best practice)
     return NextResponse.json(
       {
-        error:
-          "An error occurred while processing your request. Please try again.",
+        error: "An error occurred while processing your request. Please try again.",
       },
       { status: 500 }
     );

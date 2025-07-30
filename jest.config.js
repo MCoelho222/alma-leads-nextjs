@@ -41,6 +41,16 @@ const customJestConfig = {
     "<rootDir>/node_modules/",
     "<rootDir>/__tests__/utils/",
   ],
+  coverageThreshold: {
+    global: {
+      branches: 40,
+      functions: 15,
+      lines: 30,
+      statements: 30,
+    },
+  },
+  coverageReporters: ["text", "lcov", "html"],
+  coverageDirectory: "coverage",
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

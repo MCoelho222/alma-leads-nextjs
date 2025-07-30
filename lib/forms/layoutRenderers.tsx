@@ -68,22 +68,12 @@ const VerticalLayoutRenderer = ({
   );
 };
 
-export const horizontalLayoutTester = rankWith(
-  100,
-  (uischema, schema, context) => {
-    return uischema.type === "HorizontalLayout";
-  }
-);
-export const horizontalLayoutRenderer = withJsonFormsLayoutProps(
-  HorizontalLayoutRenderer
-);
+export const horizontalLayoutTester = rankWith(100, (uischema, schema, context) => {
+  return uischema.type === "HorizontalLayout";
+});
+export const horizontalLayoutRenderer = withJsonFormsLayoutProps(HorizontalLayoutRenderer);
 
-export const verticalLayoutTester = rankWith(
-  100,
-  (uischema, schema, context) => {
-    return uischema.type === "VerticalLayout";
-  }
-);
-export const verticalLayoutRenderer = withJsonFormsLayoutProps(
-  VerticalLayoutRenderer
-);
+export const verticalLayoutTester = rankWith(100, (uischema, schema, context) => {
+  return uischema.type === "VerticalLayout";
+});
+export const verticalLayoutRenderer = withJsonFormsLayoutProps(VerticalLayoutRenderer);
